@@ -1,0 +1,1077 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}</style></head><body>
+<title>Groundwork</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --page-bg: #f7c04c;
+    --bg: #f4f6fa;
+    --bg-alt: #eceff5;
+    --surface: #ffffff;
+    --surface-2: #eef1f6;
+    --border: #e2e6ee;
+    --ink: #182242;
+    --ink-soft: #454d6c;
+    --ink-mute: #888fa6;
+    --gold: #1cb2d6;
+    --gold-ink: #0d7c96;
+    --gold-soft: #e0f6fb;
+    --gold-soft-border: #b8e9f2;
+    --btn-ink: #1cb2d6;
+    --btn-ink-text: #ffffff;
+    --focus: #1cb2d6;
+    --fav: #fb5679;
+    --shadow: rgba(24, 34, 66, 0.14);
+    --card-shadow: rgba(24, 34, 66, 0.08);
+  }
+
+  :root:not([data-theme="light"]) {
+    @media (prefers-color-scheme: dark) {
+      --page-bg: #0e1015;
+      --bg: #171a23;
+      --bg-alt: #1c1f29;
+      --surface: #1f232f;
+      --surface-2: #262a37;
+      --border: #363c4d;
+      --ink: #eef0f6;
+      --ink-soft: #c4c8d6;
+      --ink-mute: #8b90a3;
+      --gold: #4fd5f2;
+      --gold-ink: #bdeff8;
+      --gold-soft: #123641;
+      --gold-soft-border: #1c5566;
+      --btn-ink: #4fd5f2;
+      --btn-ink-text: #0b1620;
+      --focus: #4fd5f2;
+      --fav: #ff7f96;
+      --shadow: rgba(0, 0, 0, 0.4);
+      --card-shadow: rgba(0, 0, 0, 0.32);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --page-bg: #0e1015;
+    --bg: #171a23;
+    --bg-alt: #1c1f29;
+    --surface: #1f232f;
+    --surface-2: #262a37;
+    --border: #363c4d;
+    --ink: #eef0f6;
+    --ink-soft: #c4c8d6;
+    --ink-mute: #8b90a3;
+    --gold: #4fd5f2;
+    --gold-ink: #bdeff8;
+    --gold-soft: #123641;
+    --gold-soft-border: #1c5566;
+    --btn-ink: #4fd5f2;
+    --btn-ink-text: #0b1620;
+    --focus: #4fd5f2;
+    --fav: #ff7f96;
+    --shadow: rgba(0, 0, 0, 0.4);
+    --card-shadow: rgba(0, 0, 0, 0.32);
+  }
+
+  * { box-sizing: border-box; }
+  html { color-scheme: light dark; }
+
+  body {
+    margin: 0;
+    background: var(--page-bg);
+    color: var(--ink);
+    font-family: "Plus Jakarta Sans", -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    padding: clamp(0.75rem, 3vw, 2.5rem);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+
+  .wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 2.75rem 1.75rem 5rem;
+    background: var(--bg);
+    border-radius: 28px;
+    box-shadow: 0 24px 60px var(--shadow);
+  }
+  @media (max-width: 640px) {
+    .wrap { border-radius: 18px; padding: 1.75rem 1.1rem 3rem; }
+  }
+
+  /* ---------- Header ---------- */
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .brand-mark {
+    width: 11px; height: 11px;
+    background: var(--gold);
+    transform: rotate(45deg);
+    flex: none;
+  }
+  .brand-name {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 800;
+    font-size: 1.5rem;
+    letter-spacing: -0.01em;
+  }
+  .eyebrow {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin: 0.35rem 0 0 1.55rem;
+  }
+
+  .hero {
+    margin-top: 2.1rem;
+    max-width: 46rem;
+  }
+  .hero h1 {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 800;
+    font-size: clamp(2.1rem, 4.6vw, 3.35rem);
+    line-height: 1.08;
+    letter-spacing: -0.015em;
+    margin: 0;
+    text-wrap: balance;
+  }
+  .hero p {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    max-width: 34rem;
+    margin: 1.1rem 0 0;
+  }
+
+  /* ---------- Search module ---------- */
+  .search-card {
+    margin-top: 2.25rem;
+    background: var(--surface);
+    border: 1.5px solid var(--ink);
+    border-radius: 16px;
+    padding: 0.6rem;
+    box-shadow: 0 10px 26px var(--shadow);
+  }
+  .search-row {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+  .zip-field {
+    position: relative;
+    flex: 1 1 220px;
+    display: flex;
+    align-items: center;
+  }
+  .zip-field svg { position: absolute; left: 0.9rem; width: 18px; height: 18px; color: var(--ink-mute); pointer-events: none; }
+  .zip-field input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 0.98rem;
+    padding: 0.85rem 0.9rem 0.85rem 2.5rem;
+    color: var(--ink);
+    outline: none;
+  }
+  .zip-field input::placeholder { color: var(--ink-mute); }
+
+  .radius-select, .age-select {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--ink);
+    background: var(--surface-2);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 0.7rem 2.1rem 0.7rem 2.6rem;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234a5064' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.85rem center;
+    cursor: pointer;
+  }
+  :root[data-theme="dark"] .radius-select, :root[data-theme="dark"] .age-select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23c3c2b7' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .radius-select, :root:not([data-theme="light"]) .age-select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23c3c2b7' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    }
+  }
+  .select-wrap { position: relative; display: flex; align-items: center; }
+  .select-wrap svg.leading { position: absolute; left: 0.85rem; width: 16px; height: 16px; color: var(--ink-mute); pointer-events: none; }
+
+  .btn-search {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--btn-ink);
+    color: var(--btn-ink-text);
+    border: none;
+    border-radius: 10px;
+    padding: 0.8rem 1.35rem;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+  }
+  .btn-search svg { width: 16px; height: 16px; }
+  .btn-search:hover { opacity: 0.88; }
+  .btn-search:focus-visible, input:focus-visible, select:focus-visible, .pill:focus-visible, .btn-cta:focus-visible {
+    outline: 2.5px solid var(--focus); outline-offset: 2px;
+  }
+
+  .zip-error {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 0.78rem;
+    color: #b5482f;
+    padding: 0.5rem 0.9rem 0.15rem;
+    display: none;
+  }
+  :root[data-theme="dark"] .zip-error { color: #e4886d; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .zip-error { color: #e4886d; } }
+  .zip-error.show { display: block; }
+
+  /* ---------- Filters ---------- */
+  .filters { margin-top: 1.9rem; }
+  .filters-label {
+    display: flex; align-items: center; gap: 0.45rem;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 0.7rem;
+  }
+  .filters-label svg { width: 14px; height: 14px; }
+
+  .pill-row { display: flex; flex-wrap: wrap; gap: 0.55rem; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 0.45rem;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 600;
+    font-size: 0.88rem;
+    padding: 0.55rem 0.95rem;
+    border-radius: 999px;
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .pill svg { width: 15px; height: 15px; flex: none; }
+  .pill[aria-pressed="true"] {
+    background: var(--btn-ink);
+    color: var(--btn-ink-text);
+    border-color: var(--btn-ink);
+  }
+  .pill:hover:not([aria-pressed="true"]) { border-color: var(--gold); }
+
+  /* ---------- Tabs ---------- */
+  .tabs {
+    display: flex; gap: 1.85rem;
+    border-bottom: 1.5px solid var(--border);
+    margin-top: 2.1rem;
+  }
+  .tab-btn {
+    background: none; border: none; cursor: pointer;
+    padding: 0.8rem 0.05rem;
+    margin-bottom: -1.5px;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--ink-mute);
+    border-bottom: 2px solid transparent;
+    display: flex; align-items: center; gap: 0.4rem;
+  }
+  .tab-btn[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--gold); }
+  .tab-btn:focus-visible { outline: 2.5px solid var(--focus); outline-offset: 2px; }
+  .tab-count {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--ink-mute);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.1rem 0.5rem;
+  }
+  .tab-btn[aria-selected="true"] .tab-count { color: var(--gold-ink); background: var(--gold-soft); border-color: var(--gold-soft-border); }
+
+  #browsePanel, #favoritesPanel { margin-top: 1.5rem; }
+
+  #recSection { margin-top: 3rem; }
+  .rec-heading {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    margin: 0 0 0.25rem;
+  }
+  .rec-sub {
+    font-size: 0.88rem;
+    color: var(--ink-mute);
+    margin: 0 0 1.1rem;
+  }
+  .rec-reason {
+    font-size: 0.78rem;
+    font-style: italic;
+    color: var(--gold-ink);
+    margin: -0.2rem 0 0;
+  }
+
+  .second-row {
+    margin-top: 0.9rem;
+    display: flex; gap: 0.6rem; flex-wrap: wrap;
+  }
+  .keyword-field { position: relative; flex: 1 1 260px; display: flex; align-items: center; }
+  .keyword-field svg.leading { position: absolute; left: 0.9rem; width: 16px; height: 16px; color: var(--ink-mute); }
+  .keyword-field input {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    border-radius: 10px;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 0.92rem;
+    padding: 0.75rem 0.9rem 0.75rem 2.5rem;
+    color: var(--ink);
+    outline: none;
+  }
+  .keyword-field input::placeholder { color: var(--ink-mute); }
+
+  /* ---------- Status line ---------- */
+  .status-line {
+    margin-top: 1.6rem;
+    font-size: 0.88rem;
+    color: var(--ink-mute);
+    display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;
+  }
+  .status-line strong { color: var(--ink-soft); font-weight: 700; }
+  .clear-link {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 700;
+    font-size: 0.84rem;
+    color: var(--gold-ink);
+    background: none; border: none; cursor: pointer;
+    text-decoration: underline;
+    padding: 0;
+  }
+  .approx-note {
+    font-size: 0.82rem;
+    color: var(--gold-ink);
+    background: var(--gold-soft);
+    border: 1px solid var(--gold-soft-border);
+    border-radius: 8px;
+    padding: 0.55rem 0.8rem;
+    margin-top: 0.7rem;
+    max-width: 40rem;
+  }
+
+  /* ---------- Grid ---------- */
+  .grid {
+    margin-top: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 6px 18px var(--card-shadow);
+  }
+
+  .card-media {
+    position: relative;
+    height: 168px;
+    display: flex; align-items: center; justify-content: center;
+    flex: none;
+  }
+  .card-media svg.illo { width: 76px; height: 76px; }
+
+  .distance-badge {
+    position: absolute;
+    top: 0.7rem; right: 0.7rem;
+    background: var(--surface);
+    color: var(--ink);
+    border-radius: 999px;
+    padding: 0.32rem 0.7rem 0.32rem 0.55rem;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    display: flex; align-items: center; gap: 0.3rem;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.28);
+  }
+  .distance-badge .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--gold);
+    flex: none;
+  }
+
+  .fav-btn {
+    position: absolute;
+    top: 0.7rem; left: 0.7rem;
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: none;
+    padding: 0;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    color: var(--ink-mute);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.28);
+  }
+  .fav-btn svg { width: 17px; height: 17px; }
+  .fav-btn:hover { color: var(--fav); }
+  .fav-btn[aria-pressed="true"] { color: var(--fav); }
+  .fav-btn[aria-pressed="true"] svg { fill: currentColor; }
+  .fav-btn:focus-visible { outline: 2.5px solid var(--focus); outline-offset: 2px; }
+
+  .card-body {
+    padding: 1.15rem 1.3rem 1.35rem;
+    display: flex; flex-direction: column; gap: 0.55rem;
+    flex: 1;
+  }
+
+  .cat-chip {
+    align-self: flex-start;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-weight: 600;
+    background: var(--gold-soft);
+    color: var(--gold-ink);
+    border: 1px solid var(--gold-soft-border);
+    border-radius: 999px;
+    padding: 0.28rem 0.65rem;
+  }
+
+  .card-title {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 700;
+    font-size: 1.18rem;
+    line-height: 1.28;
+    margin: 0.15rem 0 0;
+    text-wrap: balance;
+  }
+
+  .org-row {
+    display: flex; align-items: center; gap: 0.4rem;
+    color: var(--ink-mute);
+    font-size: 0.87rem;
+  }
+  .org-row svg { width: 14px; height: 14px; flex: none; }
+
+  .card-desc {
+    font-size: 0.9rem;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    margin: 0.1rem 0 0.15rem;
+  }
+
+  .meta-rows { display: flex; flex-direction: column; gap: 0.4rem; margin-top: auto; padding-top: 0.3rem; }
+  .meta-row { display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.83rem; color: var(--ink-mute); }
+  .meta-row svg { width: 14px; height: 14px; flex: none; margin-top: 0.14rem; }
+
+  .btn-cta {
+    margin-top: 1.1rem;
+    display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    background: var(--btn-ink);
+    color: var(--btn-ink-text);
+    border: none;
+    border-radius: 10px;
+    padding: 0.8rem 1rem;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 700;
+    font-size: 0.92rem;
+    cursor: pointer;
+    width: 100%;
+    text-decoration: none;
+    box-sizing: border-box;
+  }
+  .btn-cta svg { width: 16px; height: 16px; flex: none; }
+  .btn-cta:hover { opacity: 0.88; }
+
+  .empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3.5rem 1.5rem;
+    color: var(--ink-mute);
+    border: 1.5px dashed var(--border);
+    border-radius: 16px;
+    font-size: 0.95rem;
+  }
+  .empty-state strong { display: block; color: var(--ink-soft); font-family: "Plus Jakarta Sans", sans-serif; font-size: 1.15rem; margin-bottom: 0.35rem; font-weight: 700; }
+</style>
+
+<div class="wrap">
+
+  <div class="brand">
+    <span class="brand-mark" aria-hidden="true"></span>
+    <span class="brand-name">Groundwork</span>
+  </div>
+  <p class="eyebrow">Volunteering, by ZIP code</p>
+
+  <div class="hero">
+    <h1>Find where your time is needed nearby.</h1>
+    <p>Enter your ZIP code to see real volunteer opportunities posted by organizations across Maryland, closest first.</p>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button class="tab-btn" id="tabBrowse" role="tab" type="button" aria-selected="true">Browse opportunities</button>
+    <button class="tab-btn" id="tabFavorites" role="tab" type="button" aria-selected="false">My favorites <span class="tab-count" id="favCountBadge">0</span></button>
+  </div>
+
+  <div id="browsePanel">
+  <div class="search-card">
+    <div class="search-row">
+      <div class="zip-field">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+        <input id="zipInput" type="text" inputmode="numeric" maxlength="5" placeholder="Enter ZIP code, e.g. 21044" aria-label="ZIP code">
+      </div>
+      <div class="select-wrap">
+        <svg class="leading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>
+        <select id="radiusSelect" class="radius-select" aria-label="Search radius">
+          <option value="5">Within 5 mi</option>
+          <option value="10">Within 10 mi</option>
+          <option value="25" selected>Within 25 mi</option>
+          <option value="50">Within 50 mi</option>
+          <option value="100">Within 100 mi</option>
+          <option value="99999">Any distance</option>
+        </select>
+      </div>
+      <button class="btn-search" id="searchBtn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        Search
+      </button>
+    </div>
+    <p class="zip-error" id="zipError">Enter a valid 5-digit ZIP code, e.g. 21044.</p>
+  </div>
+
+  <div class="filters">
+    <div class="filters-label">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+      Filter by type
+    </div>
+    <div class="pill-row" id="pillRow"></div>
+
+    <div class="second-row">
+      <div class="keyword-field">
+        <svg class="leading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input id="keywordInput" type="text" placeholder='Search by keyword — e.g. "animals", "weekend", "reading"...' aria-label="Search by keyword">
+      </div>
+      <div class="select-wrap">
+        <svg class="leading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-3a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v3"/><circle cx="12" cy="7" r="4"/></svg>
+        <select id="ageSelect" class="age-select" aria-label="Minimum age suitability">
+          <option value="">Any age</option>
+          <option value="0">All ages welcome</option>
+          <option value="12">12 and up</option>
+          <option value="14">14 and up</option>
+          <option value="16">16 and up</option>
+          <option value="18">18 and up</option>
+          <option value="21">21 and up</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <p class="status-line" id="statusLine"></p>
+
+  <div class="grid" id="grid"></div>
+  </div>
+
+  <div id="favoritesPanel" hidden>
+    <p class="status-line" id="favStatusLine"></p>
+    <div class="grid" id="favGrid"></div>
+
+    <div id="recSection" hidden>
+      <h2 class="rec-heading">Recommended for you</h2>
+      <p class="rec-sub">Based on the categories and areas you've favorited, within your current ZIP radius and age filter.</p>
+      <div class="grid" id="recGrid"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var ICONS = {
+    leaf: '<path d="M4 20c8-1 14-6 15-15C11 6 6 12 4 20Z"/><path d="M9 15c2-2 5-4 8-6"/>',
+    paw: '<circle cx="8" cy="7" r="2"/><circle cx="14" cy="6" r="2"/><circle cx="18" cy="10" r="2"/><circle cx="5" cy="12" r="2"/><path d="M12 12c-3.3 0-6 2.4-6 5.3 0 1.5 1.2 2.7 2.7 2.7.9 0 1.4-.3 2.3-.3s1.4.3 2.3.3c.9 0 1.4-.3 2.3-.3s1.4.3 2.3.3c1.5 0 2.7-1.2 2.7-2.7 0-2.9-2.7-5.3-6-5.3Z" fill="none"/>',
+    heart: '<path d="M12 21s-7-4.5-9.5-9C.7 8.4 2.3 5 6 5c2 0 3.6 1.3 6 4 2.4-2.7 4-4 6-4 3.7 0 5.3 3.4 3.5 7-2.5 4.5-9.5 9-9.5 9Z"/>',
+    utensils: '<path d="M6 3v7a2 2 0 0 0 4 0V3M8 10v11M17 3c-1.7 0-3 2-3 5s1.3 5 3 5v8"/>',
+    book: '<path d="M4 5.5C4 4.7 4.7 4 5.5 4H12v16H5.5A1.5 1.5 0 0 1 4 18.5v-13Z"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H12v16h6.5a1.5 1.5 0 0 0 1.5-1.5v-13Z"/>',
+    pulse: '<path d="M3 12h4l2-7 4 14 2-7h6"/>',
+    people: '<circle cx="8" cy="8" r="3"/><circle cx="17" cy="9" r="2.6"/><path d="M2.5 20c.4-3.4 2.7-5.5 5.5-5.5s5.1 2.1 5.5 5.5M14.5 20c.3-2.7 2-4.5 4.2-4.5s3.9 1.8 4.2 4.5"/>',
+    palette: '<path d="M12 3a9 8 0 1 0 0 16c1 0 1.6-.7 1.6-1.5 0-.4-.2-.8-.4-1.1-.2-.3-.4-.6-.4-1 0-.7.6-1.2 1.3-1.2H16c2.2 0 4-1.6 4-4C20 6 16.6 3 12 3Z"/><circle cx="7.5" cy="11" r="1.1"/><circle cx="9.5" cy="7.3" r="1.1"/><circle cx="14.5" cy="6.8" r="1.1"/>',
+    shield: '<path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3Z"/><path d="M9.5 12l1.8 1.8L15 10"/>',
+    gift: '<rect x="3" y="9" width="18" height="4" rx="1"/><path d="M5 13h14v7a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-7Z"/><path d="M12 9v12M12 9C10.5 6 8 5.5 7 6.5S7.5 9 12 9ZM12 9c1.5-3 4-3.5 5-2.5S16.5 9 12 9Z"/>',
+    sliders: '<path d="M4 6h16M7 12h10M10 18h4"/>',
+    building: '<rect x="4" y="3" width="9" height="18" rx="1"/><path d="M13 8h6v13h-6M7 7h1M7 11h1M7 15h1"/>',
+    pin: '<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>',
+    clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/>',
+    cake: '<path d="M4 21v-8a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v8"/><path d="M2 21h20M8 9V6a2 2 0 1 1 4 0 2 2 0 1 1 4 0v3"/><path d="M4 16c1.2 1 2.3 1 3.5 0s2.3-1 3.5 0 2.3 1 3.5 0 2.3-1 3.5 0"/>',
+    globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 3.8 5.6 3.8 9S14.5 18.5 12 21c-2.5-2.5-3.8-5.6-3.8-9S9.5 5.5 12 3Z"/>'
+  };
+  function icon(name, extraClass) {
+    return '<svg class="' + (extraClass || '') + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + ICONS[name] + '</svg>';
+  }
+
+  // Larger flat illustrations for each card media header.
+  var ILLOS = {
+    animals: '<svg class="illo" viewBox="0 0 100 100" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="42" cy="46" r="19"/><path d="M28 33c-6-6-14-6-16 0s3 13 10 14"/><path d="M56 33c6-6 14-6 16 0s-3 13-10 14"/><circle cx="35" cy="43" r="1.6" fill="#fff"/><circle cx="49" cy="43" r="1.6" fill="#fff"/><path d="M39 52c1.5 1.6 4.5 1.6 6 0"/><path d="M74 62l8-4M78 58l3 8"/><path d="M70 66c3 3 9 3 12 0"/></svg>',
+    environment: '<svg class="illo" viewBox="0 0 100 100" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M50 20c14 0 24 9 24 22 0 6-4 10-10 10-3-6-3-13 0-19"/><path d="M50 20c-2 12-2 24 0 32"/><path d="M15 68c8-4 14-4 20 0s12 4 20 0 14-4 20 0 12 4 10 0"/><path d="M15 78c8-4 14-4 20 0s12 4 20 0 14-4 20 0 12 4 10 0"/></svg>',
+    seniors: '<svg class="illo" viewBox="0 0 100 100" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M50 32c-6-8-18-9-23-1s0 19 23 35c23-16 28-27 23-35s-17-7-23 1Z"/><path d="M28 68c-4 4-8 10-8 16M72 68c4 4 8 10 8 16" stroke-width="2.4"/></svg>',
+    food: '<svg class="illo" viewBox="0 0 100 100" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 45h60l-6 30a6 6 0 0 1-6 5H32a6 6 0 0 1-6-5L20 45Z"/><path d="M14 45h72"/><path d="M35 45c0-14 6-22 15-22s15 8 15 22" /><circle cx="38" cy="58" r="2" fill="#fff" stroke="none"/><circle cx="50" cy="63" r="2" fill="#fff" stroke="none"/><circle cx="62" cy="58" r="2" fill="#fff" stroke="none"/></svg>',
+    education: '<svg class="illo" viewBox="0 0 100 100" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M50 30c-6-5-18-7-28-4v42c10-3 22-1 28 4 6-5 18-7 28-4V26c-10-3-22-1-28 4Z"/><path d="M50 30v42"/><path d="M64 20l14 5-4 14-14-5 4-14Z"/></svg>',
+    health: '<svg class="illo" viewBox="0 0 100 100" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M42 20h16v16h16v16H58v16H42V52H26V36h16V20Z"/><path d="M18 74h14l6-10 8 16 6-12 5 6h15" stroke-width="2.6"/></svg>',
+    community: '<svg class="illo" viewBox="0 0 100 100" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="30" cy="38" r="10"/><circle cx="70" cy="38" r="10"/><circle cx="50" cy="30" r="11"/><path d="M12 78c2-12 9-19 18-19s16 7 18 19"/><path d="M52 78c2-12 9-19 18-19s16 7 18 19" transform="translate(-2 0)"/></svg>',
+    arts: '<svg class="illo" viewBox="0 0 100 100" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M50 18c-19 0-32 13-32 28 0 10 7 15 15 15 4 0 5-2 5-5 0-2-2-3-2-6 0-4 4-6 9-6h9c9 0 16-6 16-14 0-7-9-12-20-12Z"/><circle cx="38" cy="40" r="2.4" fill="#fff" stroke="none"/><circle cx="46" cy="30" r="2.4" fill="#fff" stroke="none"/><circle cx="60" cy="30" r="2.4" fill="#fff" stroke="none"/><circle cx="66" cy="42" r="2.4" fill="#fff" stroke="none"/><path d="M62 62l16 16M74 60l6 6-4 4-6-6Z"/></svg>',
+    disaster: '<svg class="illo" viewBox="0 0 100 100" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M22 50 50 26l28 24"/><path d="M28 46v28h44V46"/><path d="M62 74V58a12 12 0 0 0-24 0v16"/><path d="M44 58l4 5-4 5" stroke-width="2.4"/></svg>',
+    other: '<svg class="illo" viewBox="0 0 100 100" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="24" y="42" width="52" height="34" rx="2"/><path d="M24 54h52"/><path d="M50 42v34"/><path d="M38 42c-4-8-2-16 4-16 4 0 6 4 8 8 2-4 4-8 8-8 6 0 8 8 4 16"/></svg>'
+  };
+
+  var CATS = [
+    { key: "environment", label: "Environment", icon: "leaf", grad: "linear-gradient(155deg,#22b394,#0e8f76)" },
+    { key: "animals", label: "Animals", icon: "paw", grad: "linear-gradient(155deg,#f5943f,#e07922)" },
+    { key: "seniors", label: "Seniors", icon: "heart", grad: "linear-gradient(155deg,#9089ee,#7368dd)" },
+    { key: "food", label: "Food & Hunger", icon: "utensils", grad: "linear-gradient(155deg,#f04f85,#d6316a)" },
+    { key: "education", label: "Education & Youth", icon: "book", grad: "linear-gradient(155deg,#3d5ce0,#2b41b8)" },
+    { key: "health", label: "Health", icon: "pulse", grad: "linear-gradient(155deg,#33b8dc,#1e93b3)" },
+    { key: "community", label: "Community & Civic", icon: "people", grad: "linear-gradient(155deg,#f4bc3c,#dd9f1e)" },
+    { key: "arts", label: "Arts & Culture", icon: "palette", grad: "linear-gradient(155deg,#cc4fac,#a8348c)" },
+    { key: "disaster", label: "Disaster Relief", icon: "shield", grad: "linear-gradient(155deg,#ea5b3d,#cf4123)" },
+    { key: "other", label: "Other", icon: "gift", grad: "linear-gradient(155deg,#6a76a8,#4f5b8a)" }
+  ];
+  var CAT_BY_KEY = {};
+  CATS.forEach(function (c) { CAT_BY_KEY[c.key] = c; });
+
+  // Real Maryland volunteer opportunities, researched from each organization's public
+  // volunteer/get-involved pages. Street addresses are included only where confidently
+  // sourced; otherwise city + ZIP is shown. Verify current shifts on the org's own site.
+  var OPPS = [
+    { title: "Oyster Gardening & Restoration Volunteer", org: "Chesapeake Bay Foundation", cat: "environment", city: "Annapolis", zip: "21403", desc: "Volunteers help grow and tend oysters at their own docks or public waterfront sites through CBF's oyster gardening program, and take part in tree plantings, farm work days, and community outreach events across the Chesapeake Bay watershed.", hours: "Varies by program — seasonal oyster gardening plus occasional weekday/weekend events", minAge: 0, url: "https://www.cbf.org/programs/volunteer/" },
+    { title: "Grounds, Trail & Program Volunteer", org: "Irvine Nature Center", cat: "environment", city: "Owings Mills", zip: "21117", address: "11201 Garrison Forest Road, Owings Mills, MD 21117", desc: "Volunteers help maintain Irvine's 211 acres of forest, meadow and wetland trails, assist in nature classrooms, and support education programs; group sessions run Tuesday through Friday.", hours: "Group sessions Tue–Fri, 9am–12pm or 1pm–4pm; individual schedules flexible", minAge: 0, url: "https://www.explorenature.org/get-involved/volunteer/" },
+    { title: "Stream Cleanup & Stewardship Volunteer", org: "Patapsco Heritage Greenway", cat: "environment", city: "Ellicott City", zip: "21043", desc: "Volunteers join stream cleanups, invasive-plant removals and tree plantings throughout the Patapsco watershed, and can train as certified Stream Watchers to help monitor water quality.", hours: "Recurring stewardship events, roughly 3-hour commitment; some water-quality monitoring 2 days a month", minAge: 12, url: "https://www.patapsco.org/connect-with-us/volunteer/" },
+    { title: "Community Greening & Nature Sanctuary Volunteer", org: "Nature Forward (Audubon Naturalist Society)", cat: "environment", city: "Chevy Chase", zip: "20815", address: "8940 Jones Mill Road, Chevy Chase, MD 20815", desc: "Volunteers support community greening and native-planting events, nature education programs, and scout Eagle/Gold Award projects at the 40-acre Woodend Nature Sanctuary.", hours: "Varies — see website for current openings", minAge: 0, url: "https://natureforward.org/volunteer/" },
+    { title: "Land Steward & Trailkeeper Volunteer", org: "Adkins Arboretum", cat: "environment", city: "Ridgely", zip: "21660", address: "12610 Eveland Road, Ridgely, MD 21660", desc: "Volunteers maintain native meadows and five miles of trails, staff the Visitor's Center front desk, and support plant sales and seasonal events at this 400-acre native garden preserve in Caroline County.", hours: "Tuesday–Saturday 10am–4pm, Sunday noon–4pm (role-dependent)", minAge: 0, url: "https://www.adkinsarboretum.org/support_the_arboretum/volunteer_program/current-volunteer-opportunities.html" },
+    { title: "River Cleanup & Stewardship Volunteer", org: "Potomac Conservancy", cat: "environment", city: "Silver Spring", zip: "20910", address: "962 Wayne Avenue, Suite 540, Silver Spring, MD 20910", desc: "Volunteers join hands-on shoreline cleanups, trail maintenance, and river-restoration events around the Potomac watershed, with an option to train for the Volunteer Leadership Team.", hours: "Shift-based, sign up for events online", minAge: 0, url: "https://potomac.org/act-local" },
+
+    { title: "Group Dog Walking & Shelter Support", org: "Baltimore Animal Rescue and Care Shelter (BARCS)", cat: "animals", city: "Baltimore", zip: "21225", address: "2490 Giles Road, Baltimore, MD 21225", desc: "Volunteer groups of 6–16 people walk shelter dogs and, when fewer dogs are available, help organize donations, build enrichment activities, and do kennel maintenance at Maryland's largest animal shelter.", hours: "Scheduled group sessions booked 1–2 months in advance; individual shifts Mon/Wed afternoons after 12pm", minAge: 18, url: "https://www.barcs.org/volunteer" },
+    { title: "Shelter Volunteer (Dogs, Cats & Small Animals)", org: "Baltimore Humane Society", cat: "animals", city: "Reisterstown", zip: "21136", address: "1601 Nicodemus Road, Reisterstown, MD 21136", desc: "Volunteers spend time with shelter dogs, cats and small animals through cage cleaning, socialization, dog walking, front-desk greeting and event support at this no-kill shelter.", hours: "Flexible — drop in any day of the week", minAge: 0, url: "https://bmorehumane.org/volunteer/" },
+    { title: "Shelter Volunteer", org: "Humane Society of Harford County", cat: "animals", city: "Fallston", zip: "21047", address: "2208 Connolly Road, Fallston, MD 21047", desc: "Volunteers support the shelter's roughly 3,000 animals a year through special events, transport, housekeeping and foster parenting at this open-admission municipal shelter.", hours: "Varies — application processing can take 60–120 days", minAge: 0, url: "https://www.harfordshelter.org/ways-to-give/volunteer" },
+    { title: "Shelter Volunteer", org: "Humane Society of Carroll County", cat: "animals", city: "Westminster", zip: "21158", address: "2517 Littlestown Pike, Westminster, MD 21158", desc: "Volunteers help with hands-on animal care, behavior enrichment, behind-the-scenes support and community outreach to help the shelter save more than 500 pets each year.", hours: "Varies — see website for current openings", minAge: 18, url: "https://hscarroll.org/volunteer-registration/" },
+    { title: "Shelter Volunteer (Dog Walking, Fostering, Socialization)", org: "Humane Society of Charles County", cat: "animals", city: "Waldorf", zip: "20602", address: "71 Industrial Park Drive, Waldorf, MD 20602", desc: "Volunteers help with dog walking, cat socialization, fostering, off-site adoption events, laundry, and grounds maintenance; a mandatory orientation is held monthly.", hours: "Orientation third Saturday monthly, 9:30–11:30am; shifts vary", minAge: 6, url: "https://humanesocietycc.org/get-involved/volunteer.html" },
+    { title: "Animal Care Volunteer", org: "Worcester County Humane Society", cat: "animals", city: "Berlin", zip: "21811", desc: "Volunteers walk dogs, clean kennels and the cattery, socialize animals, and help with laundry, transport, and fundraising at this no-kill shelter partnered with the Town of Ocean City.", hours: "Varies — see website for current openings", minAge: 16, url: "https://worcestercountyhumanesociety.org/" },
+    { title: "Shelter Volunteer (Dog Walking, Cat Care, Adoption Support)", org: "Tri-County Animal Shelter", cat: "animals", city: "Hughesville", zip: "20637", address: "6707 Animal Shelter Road, Hughesville, MD 20637", desc: "Volunteers walk shelter dogs, socialize cats, photograph adoptable pets, and help with kennel cleaning and laundry at this shelter serving Charles, Calvert, and St. Mary's counties.", hours: "Adoption hours Mon–Fri 12–5pm, Sat 10am–3pm; volunteer as much as you like", minAge: 14, url: "https://www.charlescountymd.gov/es/animalshelter/tri-county-animal-shelter" },
+
+    { title: "Meal Delivery Driver", org: "Meals on Wheels of Central Maryland", cat: "seniors", city: "Baltimore", zip: "21224", address: "515 S. Haven Street, Baltimore, MD 21224", desc: "Volunteer drivers deliver nutritious meals to homebound seniors along set routes in their own vehicles, Monday through Friday starting at 10:30am, after a background check and short training.", hours: "Weekday mornings, routes run about 1.5 hours starting 10:30am", minAge: 18, url: "https://mealsonwheelsmd.org/volunteer/meal-delivery/" },
+    { title: "Volunteer Driver for Seniors", org: "Neighbor Ride", cat: "seniors", city: "Columbia", zip: "21044", address: "5570 Sterrett Place, Suite 102, Columbia, MD 21044", desc: "Volunteer drivers use their own vehicles to take Howard County residents age 60 and over to medical appointments, shopping and social outings; a 45-minute orientation is required before driving.", hours: "Daytime, evening and weekend opportunities — drivers choose rides that fit their schedule", minAge: 0, url: "https://neighborride.org/how-it-works/prospective-drivers/" },
+    { title: "Meals on Wheels Volunteer", org: "Garrett County Community Action Committee, Inc.", cat: "seniors", city: "Oakland", zip: "21550", address: "104 East Center Street, Oakland, MD 21550", desc: "Volunteers deliver meals and provide friendly visits to local seniors, or help with meal prep in the kitchens at the Mary Browning Senior Center in Oakland or the Grantsville Senior Center.", hours: "Flexible, Monday–Friday, once a week or occasional", minAge: 0, url: "https://garrettcac.org/" },
+    { title: "RSVP Senior Volunteer Program", org: "St. Mary's County Department of Aging & Human Services", cat: "seniors", city: "Leonardtown", zip: "20650", desc: "Places volunteers age 55+ in roles supporting county agencies, nonprofits, and community groups throughout St. Mary's County, from one-time events to ongoing weekly assignments.", hours: "Varies — see website for current openings", minAge: 55, url: "https://www.stmaryscountymd.gov/aging/rsvp-overview/" },
+    { title: "Meal Delivery Driver for Homebound Seniors", org: "Meals on Wheels Montgomery County", cat: "seniors", city: "Rockville", zip: "20850", desc: "Volunteers pick up meals around 10:30am from distribution points and deliver them to homebound seniors throughout Montgomery County, choosing a regular weekly route or serving as a substitute driver.", hours: "Weekday mornings; regular or substitute routes", minAge: 18, url: "https://mowmc.org/volunteer/meal-delivery/" },
+
+    { title: "Warehouse Sorting & Packing Volunteer", org: "Maryland Food Bank", cat: "food", city: "Baltimore", zip: "21227", address: "2200 Halethorpe Farms Road, Baltimore, MD 21227", desc: "Volunteers sort donated food, check expiration dates on the conveyor line, pack boxes and build meal kits in three-hour shifts at the Food Bank's main Baltimore warehouse.", hours: "3-hour shifts, individual or group, by appointment", minAge: 18, url: "https://mdfoodbank.org/ways-to-give/volunteer/" },
+    { title: "Repack & Sort Volunteer", org: "Maryland Food Bank – Western Branch", cat: "food", city: "Hagerstown", zip: "21740", address: "220 McRand Court, Hagerstown, MD 21740", desc: "Volunteers pull and load orders, sort salvage, and take part in special repacking events like Bags of Plenty and Potato Bagging, serving Frederick, Hagerstown, Cumberland and Oakland from this Western Maryland branch.", hours: "Tue 8am–12pm, Wed 10am–2pm, Thu 12pm–4pm", minAge: 18, url: "https://mdfoodbank.org/ways-to-give/volunteer/" },
+    { title: "Food Pantry Volunteer", org: "Carroll County Food Sunday", cat: "food", city: "Westminster", zip: "21157", address: "10 Distillery Drive, Westminster, MD 21157", desc: "Volunteers greet and interview clients, pack and sort food, and help organize food drives at this volunteer-run emergency food pantry that has served Carroll County for over 40 years.", hours: "Tue–Thu 10–11:15am & 1–2:15pm, Sat 9–11:15am", minAge: 0, url: "https://ccfoodsunday.org/volunteer/" },
+    { title: "Warehouse & Food Distribution Volunteer", org: "Manna Food Center", cat: "food", city: "Gaithersburg", zip: "20877", address: "9311 Gaither Road, Gaithersburg, MD 20877", desc: "Volunteers receive and sort donated food, pack Manna boxes, transport fresh produce from partner farms, and assist at public distribution sites and community food-education events.", hours: "Warehouse Mon–Fri 8am–2pm; some evening/weekend shifts", minAge: 11, url: "https://www.mannafood.org/how-to-help/volunteer/" },
+    { title: "Food Gleaning & Warehouse Volunteer", org: "Maryland Food Bank – Eastern Shore Branch", cat: "food", city: "Salisbury", zip: "21801", address: "28500 Owens Branch Road, Salisbury, MD 21801", desc: "Volunteers glean and pack produce, sort food donations, and help distribute food across eight Eastern Shore counties, with farm-harvest opportunities through the Farm to Food Bank program.", hours: "Gleanings Sun–Thu evenings; warehouse shifts Mon–Fri 8am–12pm", minAge: 0, url: "https://mdfoodbank.org/about/locations/eastern-shore-branch/" },
+    { title: "Community Marketplace Volunteer", org: "Capital Area Food Bank", cat: "food", city: "Glenarden", zip: "20706", address: "Glenarden Community Center, 8615 McLain Avenue, Glenarden, MD 20706", desc: "Volunteers distribute free groceries and provide nutrition education to Prince George's County residents at the CAFB Community Marketplace; involves standing, walking, and some lifting.", hours: "Shift-based, sign up online", minAge: 12, url: "https://volunteer.capitalareafoodbank.org/volunteer-individual" },
+
+    { title: "Literacy Tutor", org: "Reading Partners Baltimore", cat: "education", city: "Baltimore", zip: "21211", address: "1500 Union Avenue, Suite 2200, Baltimore, MD 21211", desc: "Volunteer tutors work one-on-one with struggling readers in Baltimore City elementary schools, committing a little over an hour a week; no prior tutoring experience is required.", hours: "Weekly, about 1 hour, generally Mon–Thu between 8am–3pm", minAge: 18, url: "https://readingpartners.org/volunteer-in-baltimore/" },
+    { title: "Classroom Volunteer", org: "Junior Achievement of Central Maryland", cat: "education", city: "Baltimore", zip: "21227", address: "1725 Twin Springs Road, Baltimore, MD 21227", desc: "Volunteers deliver hands-on financial literacy, work-readiness and entrepreneurship lessons to K-12 students in classrooms across Allegany, Anne Arundel, Baltimore, Carroll, Frederick, Garrett, Harford, Howard and Washington counties.", hours: "From a single school-day visit to weekly 1-hour sessions over 5–10 weeks", minAge: 0, url: "https://centralmaryland.ja.org/volunteer/index" },
+    { title: "Court Appointed Special Advocate (CASA) Volunteer", org: "Voices for Children Montgomery", cat: "education", city: "Rockville", zip: "20851", address: "1010 Grandin Avenue, Suite B-3, Rockville, MD 20851", desc: "Trained volunteer advocates are matched one-on-one with a child in Montgomery County's foster-care system, gathering information and advocating for the child's best interest in court.", hours: "12–15 hours/month, plus monthly supervision meeting", minAge: 21, url: "https://voicesforchildrenmontgomery.org/volunteer/" },
+    { title: "Court Appointed Special Advocate (CASA) Volunteer", org: "CASA/Prince George's County, Inc.", cat: "education", city: "Riverdale", zip: "20737", address: "6811 Kenilworth Avenue, Suite 402, Riverdale, MD 20737", desc: "Volunteers appointed by judges advocate for abused and neglected children in Prince George's County foster care, meeting with their assigned child twice a month.", hours: "10–15 hours/month", minAge: 21, url: "https://pgcasa.org/volunteer/become-a-volunteer/" },
+    { title: "Youth Program & Activity Volunteer", org: "Boys & Girls Clubs of Southern Maryland", cat: "education", city: "North Beach", zip: "20714", desc: "Volunteers lead STEM, arts, sports, cooking, and homework-help activities for youth ages 6–18 at clubs across Calvert, St. Mary's, and Charles counties; background check required.", hours: "Flexible, all seven days of the week", minAge: 18, url: "https://bgcsm.net/volunteer/" },
+
+    { title: "Hospital Volunteer Services", org: "Johns Hopkins Hospital", cat: "health", city: "Baltimore", zip: "21287", address: "600 North Wolfe Street, Baltimore, MD 21287", desc: "Volunteers support patients and staff throughout the hospital — helping visitors navigate the building, assisting with animal-assisted therapy, spiritual services, and other patient-experience roles.", hours: "Minimum 100 hours/year, typically a 4-hour shift weekly for 6+ months", minAge: 18, url: "https://www.hopkinsmedicine.org/volunteer-services/jhh" },
+    { title: "Patient & Family Support Volunteer", org: "Hospice of the Chesapeake", cat: "health", city: "Pasadena", zip: "21122", address: "90 Ritchie Highway, Pasadena, MD 21122", desc: "Volunteers visit and comfort hospice patients, perform honor salutes for veteran patients, support caregivers, and serve as facilitators in grief-support programs across Anne Arundel and nearby counties.", hours: "Varies — see website for current openings", minAge: 0, url: "https://www.hospicechesapeake.org/volunteer/" },
+    { title: "Compassionate Care Patient Companion Volunteer", org: "Hospice of the Chesapeake", cat: "health", city: "Largo", zip: "20774", address: "9500 Medical Center Drive, Suite 250, Largo, MD 20774", desc: "Volunteers provide companionship and respite for hospice patients and their families, with additional roles in pet therapy, veteran honor salutes, and administrative support.", hours: "A few hours per week, flexible", minAge: 18, url: "https://www.hospicechesapeake.org/volunteer/" },
+    { title: "Patient Care & Bereavement Support Volunteer", org: "Hospice of St. Mary's (MedStar St. Mary's Health Care System)", cat: "health", city: "Callaway", zip: "20620", address: "44724 Hospice Lane, Callaway, MD 20620", desc: "Trained volunteers sit bedside with dying patients to provide comfort and support families, with some volunteers continuing on as grief companions for bereaved relatives.", hours: "Varies — see website for current openings", minAge: 18, url: "https://www.stmaryshealthcaresystem.org/careers/volunteer-at-st-marys/hospice-volunteer-program" },
+
+    { title: "Team Home / Team Green / Team Hunger Volunteer", org: "United Way of Central Maryland", cat: "community", city: "Baltimore", zip: "21230", address: "1800 Washington Boulevard, Suite 340, Baltimore, MD 21230", desc: "Volunteers take part in group projects such as sorting and packing food, painting and cleaning up pantries and community facilities, and maintaining reforested areas and trails around Central Maryland.", hours: "Varies — see calendar on website for current openings", minAge: 0, url: "https://www.volunteermd.org/" },
+    { title: "Home Repair Volunteer", org: "Rebuilding Together Baltimore", cat: "community", city: "Baltimore", zip: "21212", address: "5513 York Road, Baltimore, MD 21212", desc: "Volunteers perform free home repairs for low-income homeowners — mostly seniors 60+ living on fixed incomes — as individuals or organized groups across Baltimore City and County.", hours: "Varies — see website for current openings", minAge: 0, url: "https://www.rtbaltimore.org/volunteer/group-volunteers" },
+    { title: "Cold Weather Shelter & Outreach Volunteer", org: "REACH of Washington County", cat: "community", city: "Hagerstown", zip: "21740", address: "140 West Franklin Street, Suite 300, Hagerstown, MD 21740", desc: "Volunteers staff REACH's overnight cold weather shelter (late October through early April) and support outreach programs assisting people experiencing homelessness in Washington County.", hours: "Shelter shifts 7pm–7am (Sundays 3pm–7am); annual volunteer application required", minAge: 0, url: "https://reachofwc.org/volunteer/" },
+    { title: "Essential Needs Center & Food Pantry Volunteer", org: "Interfaith Works", cat: "community", city: "Rockville", zip: "20850", address: "114 W. Montgomery Avenue, Rockville, MD 20850", desc: "Volunteers sort and stock donated food and clothing, help clients shop at the Essential Needs Center, and prepare meals for shelter and supportive-housing residents.", hours: "Orientation Wed 2:30–4:30pm or Sat 8:30–10:30am; shifts vary", minAge: 14, url: "https://www.iworksmc.org/" },
+    { title: "Construction & ReStore Volunteer", org: "Habitat for Humanity Choptank", cat: "community", city: "Easton", zip: "21601", address: "8610 Commerce Drive, Easton, MD 21601", desc: "No experience needed — volunteers help build and repair homes on construction sites or support the ReStore in Talbot and Dorchester counties through donation intake, pricing, and customer service.", hours: "Varies — see website for current openings", minAge: 16, url: "https://habitatchoptank.org/volunteer/" },
+    { title: "Home Build & ReStore Volunteer", org: "Patuxent Habitat for Humanity", cat: "community", city: "Lexington Park", zip: "20653", address: "21600 Great Mills Road, Unit 18A, Lexington Park, MD 20653", desc: "Volunteers assist with home construction and repairs — including a veterans' repair program — and staff the ReStore thrift shop serving St. Mary's and Calvert counties.", hours: "Varies — see website for current openings", minAge: 16, url: "https://phfh.volunteermatrix.com/" },
+
+    { title: "Museum Docent", org: "Baltimore Museum of Art", cat: "arts", city: "Baltimore", zip: "21218", address: "10 Art Museum Drive, Baltimore, MD 21218", desc: "Docents lead interactive tours for Pre-K–12 students and occasional adult groups exploring the museum's collection; the role requires intensive training and at least 24 school tours a year.", hours: "Docent training Mondays Sept–May 9:45am–12pm; tours Wed/Thu/Fri 9:30am–1:30pm (recruitment is seasonal)", minAge: 18, url: "https://artbma.org/about/career-volunteer-opportunities" },
+    { title: "Tour Guide, Boat Restoration & Garden Volunteer", org: "Annapolis Maritime Museum & Park", cat: "arts", city: "Annapolis", zip: "21403", address: "723 Second Street, Annapolis, MD 21403", desc: "Volunteers lead heritage tours aboard the museum's skipjack Wilma Lee, help restore historic Chesapeake workboats, support events, digitize museum collections, or tend the museum garden.", hours: "Year-round, with higher need during summer concerts and annual events", minAge: 0, url: "https://amaritime.org/about/volunteer/" },
+    { title: "Volunteer Usher & Concierge", org: "Strathmore", cat: "arts", city: "North Bethesda", zip: "20852", address: "5301 Tuckerman Lane, North Bethesda, MD 20852", desc: "Volunteer ushers greet patrons and assist during performances at the Music Center, with additional roles serving Afternoon Tea, concierge services, and special events.", hours: "Minimum 3 events per month, evenings/weekends", minAge: 18, url: "https://www.strathmore.org/about-us/employment-internship-and-volunteer-opportunities/volunteer-opportunities/" },
+    { title: "Docent & Front Desk Volunteer", org: "Academy Art Museum", cat: "arts", city: "Easton", zip: "21601", address: "106 South Street, Easton, MD 21601", desc: "Volunteers lead docent-guided tours, staff the front desk, and support exhibition installations, receptions, and seasonal events like the Spring Gala and Craft Show.", hours: "Varies — see website for current openings", minAge: 0, url: "https://academyartmuseum.org/support/volunteer/" },
+    { title: "Gallery, Teaching & Event Volunteer", org: "Art League of Ocean City (Ocean City Center for the Arts)", cat: "arts", city: "Ocean City", zip: "21842", address: "502 94th Street, Ocean City, MD 21842", desc: "Volunteers assist as teaching aides, gallery and clerical help, event setup crew, or committee members at this bayside arts center with a gallery, pottery studio, and artist studios.", hours: "Varies — see website for current openings", minAge: 0, url: "https://artleagueofoceancity.org/get-involved/volunteer/" },
+
+    { title: "Disaster Action Team Volunteer", org: "American Red Cross – Central Maryland Chapter", cat: "disaster", city: "Baltimore", zip: "21215", address: "4700 Mount Hope Drive, Baltimore, MD 21215", desc: "Disaster Action Team volunteers respond in person to home fires and other local emergencies, providing comfort, immediate necessities, and connecting affected families to Red Cross support.", hours: "On-call rotating shifts, about 24 hours/month in 6-hour blocks", minAge: 18, url: "https://www.redcross.org/volunteer/disaster-action-team.html" },
+    { title: "Community Emergency Response Team (CERT) Member", org: "Anne Arundel–Annapolis Community Emergency Response Team (AAACERT)", cat: "disaster", city: "Annapolis", zip: "21401", desc: "Volunteers complete a free CERT Basic Course covering disaster preparedness, fire safety and basic emergency response, then assist with community education, smoke-detector installations, and event support like traffic and parking management.", hours: "CERT Basic Course offered 3x/year (two in spring, one in fall); ongoing volunteer events", minAge: 0, url: "https://www.aaacert.org/" },
+    { title: "Disaster Action Team & Blood Drive Volunteer", org: "American Red Cross – National Capital & Greater Chesapeake Region", cat: "disaster", city: "Silver Spring", zip: "20910", address: "2020 East West Highway, Silver Spring, MD 20910", desc: "Volunteers help communities prepare for emergencies, respond to local disasters, support military families, teach health/safety classes, and assist at blood drives.", hours: "Varies — regular shifts or on-call for major disasters", minAge: 18, url: "https://www.redcross.org/local/dc-va-md-de/volunteer.html" },
+    { title: "Disaster Response & Blood Drive Volunteer (Eastern Shore)", org: "American Red Cross – Delmarva Chapter", cat: "disaster", city: "Salisbury", zip: "21801", desc: "Volunteers respond to local disasters, support military families, teach preparedness and health/safety classes, and assist blood drives across Maryland's Eastern Shore counties.", hours: "Varies — see website for current openings", minAge: 18, url: "https://www.redcross.org/local/dc-va-md-de/volunteer.html" },
+    { title: "Community Emergency Response Team (CERT) Volunteer", org: "Montgomery County CERT (Montgomery County Fire and Rescue Service)", cat: "disaster", city: "Gaithersburg", zip: "20878", address: "100 Edison Park Drive, Gaithersburg, MD 20878", desc: "Volunteers complete a free FEMA-based training course covering fire safety, light search and rescue, and disaster medical operations, then join community CERT teams to assist neighbors until professional responders arrive; a Teen CERT track is offered for ages 14–18.", hours: "5-week training course, then event-based deployment", minAge: 14, url: "https://www.montgomerycountymd.gov/mcfrs/recruiting/cert.html" },
+
+    { title: "ReStore Volunteer", org: "Habitat for Humanity Susquehanna", cat: "other", city: "Aberdeen", zip: "21001", address: "1013 Beards Hill Road, Building 300, Aberdeen, MD 21001", desc: "Volunteers assist customers, process and repair donated furniture, accept drop-off donations, and help run the ReStore, which funds affordable housing work in Harford and Cecil counties.", hours: "2–4 hour shifts, flexible; store open Tue–Sat", minAge: 14, url: "https://habitatsusq.org/restore/restore-volunteers/" },
+    { title: "ReStore Volunteer", org: "Habitat for Humanity of Frederick County", cat: "other", city: "Frederick", zip: "21701", address: "917 North East Street, Frederick, MD 21701", desc: "Volunteers receive and process donated building materials, furniture and housewares, and assist with customer service and cashiering at the Frederick County ReStore.", hours: "Store open Tue–Sat 10am–5pm", minAge: 16, url: "https://frederickhabitat.org/get-involved/volunteer/" },
+    { title: "ReStore Volunteer", org: "Allegany County Habitat for Humanity", cat: "other", city: "LaVale", zip: "21502", address: "28 Lane Avenue, LaVale, MD 21502", desc: "Volunteers help run the ReStore through customer-facing sales floor work or behind-the-scenes donation processing, supporting affordable-housing builds in Allegany County.", hours: "Thu–Fri 10am–6pm, Sat 10am–2pm", minAge: 0, url: "https://alleganycountyhfh.org/" },
+    { title: "ReStore Retail Volunteer", org: "Habitat for Humanity Metro Maryland", cat: "other", city: "Rockville", zip: "20850", address: "1029 East Gude Drive, Rockville, MD 20850", desc: "Volunteers receive, clean, test, and merchandise donated furniture and household goods at the ReStore, with proceeds funding local affordable-housing builds.", hours: "Tue–Sat 10am–2pm or 2–5pm; Sun 11am–2pm or 2–5pm", minAge: 14, url: "https://habitatmm.org/restore/restore-volunteer.html" },
+    { title: "Thrift Store Volunteer", org: "Worcester County Humane Society", cat: "other", city: "Ocean City", zip: "21842", address: "12703 Sunset Avenue, Unit 5 & 6, West Ocean City, MD 21842", desc: "Volunteers sort, price, and sell donated goods at the shelter's thrift store, with proceeds supporting the no-kill shelter's animal-care programs.", hours: "Varies — see website for current openings", minAge: 16, url: "https://worcestercountyhumanesociety.org/" }
+  ];
+
+  // Approximate coordinates for the ZIP codes above (demo-grade, city-level accuracy).
+  var ZIP_COORDS = {
+    "20602": [38.6246, -76.9414], "20620": [38.2100, -76.6370], "20637": [38.5401, -76.8202],
+    "20650": [38.2887, -76.6316], "20653": [38.2529, -76.4477], "20706": [38.9412, -76.8497],
+    "20714": [38.7107, -76.5327], "20737": [38.9612, -76.9280], "20774": [38.8801, -76.8330],
+    "20815": [38.9737, -77.0770], "20850": [39.0840, -77.1528], "20851": [39.0745, -77.1214],
+    "20852": [39.0468, -77.1197], "20877": [39.1434, -77.2014], "20878": [39.1479, -77.2456],
+    "20910": [38.9959, -77.0278], "21001": [39.5093, -76.1638], "21042": [39.2673, -76.7983],
+    "21043": [39.2537, -76.8047], "21044": [39.2156, -76.8611], "21047": [39.5162, -76.4230],
+    "21117": [39.4198, -76.7811], "21122": [39.1071, -76.5716], "21136": [39.4707, -76.8264],
+    "21157": [39.5754, -76.9958], "21158": [39.5754, -76.9958], "21211": [39.3299, -76.6205],
+    "21212": [39.3629, -76.6122], "21215": [39.3428, -76.6714], "21218": [39.3260, -76.6022],
+    "21224": [39.2851, -76.5666], "21225": [39.2379, -76.6122], "21227": [39.2515, -76.6772],
+    "21230": [39.2721, -76.6244], "21287": [39.2970, -76.5929], "21401": [38.9784, -76.4922],
+    "21403": [38.9556, -76.4880], "21502": [39.6512, -78.8228], "21550": [39.4084, -79.4136],
+    "21601": [38.7746, -76.0763], "21660": [38.9548, -75.8836], "21701": [39.4143, -77.4105],
+    "21740": [39.6418, -77.7200], "21801": [38.3607, -75.5994], "21811": [38.3223, -75.2166],
+    "21842": [38.3459, -75.0849]
+  };
+  // Loose regional fallback by ZIP3 prefix, used only when the exact ZIP isn't in the table above.
+  var ZIP3_FALLBACK = {
+    "206": [38.60, -76.90], "207": [38.90, -76.85], "208": [39.05, -77.15], "209": [39.08, -77.15],
+    "210": [39.15, -76.75], "211": [39.30, -76.61], "212": [39.35, -76.65], "215": [39.55, -78.90],
+    "216": [38.85, -75.95], "217": [39.60, -77.70], "218": [38.45, -75.35], "219": [39.60, -75.85]
+  };
+  var MD_CENTER = [39.0458, -76.6413];
+
+  function geocode(zip) {
+    if (ZIP_COORDS[zip]) return { coords: ZIP_COORDS[zip], approx: false };
+    var fallback = ZIP3_FALLBACK[zip.slice(0, 3)];
+    if (fallback) return { coords: fallback, approx: true };
+    return { coords: MD_CENTER, approx: true };
+  }
+
+  function haversineMiles(a, b) {
+    var R = 3958.8;
+    var dLat = (b[0] - a[0]) * Math.PI / 180;
+    var dLon = (b[1] - a[1]) * Math.PI / 180;
+    var lat1 = a[0] * Math.PI / 180, lat2 = b[0] * Math.PI / 180;
+    var h = Math.sin(dLat / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) ** 2;
+    return R * 2 * Math.atan2(Math.sqrt(h), Math.sqrt(1 - h));
+  }
+
+  OPPS.forEach(function (o, i) {
+    o.id = i;
+    o.coords = ZIP_COORDS[o.zip] || MD_CENTER;
+    if (!o.address) o.address = o.city + ", MD " + o.zip;
+    o.ageLabel = o.minAge > 0 ? ("Ages " + o.minAge + "+") : "All ages welcome";
+  });
+
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
+  // Fixed for this page load — the home grid shows this order until a filter narrows it,
+  // rather than reshuffling on every render.
+  var RANDOM_ORDER = shuffle(OPPS.map(function (o) { return o.id; }));
+
+  var FAV_KEY = "groundwork:favorites";
+  function loadFavorites() {
+    try {
+      var raw = localStorage.getItem(FAV_KEY);
+      var arr = raw ? JSON.parse(raw) : [];
+      return new Set(Array.isArray(arr) ? arr : []);
+    } catch (e) { return new Set(); }
+  }
+  function saveFavorites(set) {
+    try { localStorage.setItem(FAV_KEY, JSON.stringify(Array.from(set))); } catch (e) {}
+  }
+
+  // ---------------- state ----------------
+  var state = {
+    selectedCats: new Set(),
+    keyword: "",
+    minAge: "",
+    radius: 25,
+    search: null, // { zip, coords, approx }
+    favorites: loadFavorites(),
+    tab: "browse" // "browse" | "favorites"
+  };
+
+  function toggleFavorite(id) {
+    if (state.favorites.has(id)) state.favorites.delete(id); else state.favorites.add(id);
+    saveFavorites(state.favorites);
+    render();
+  }
+
+  // ---------------- render pills ----------------
+  var pillRow = document.getElementById("pillRow");
+  CATS.forEach(function (c) {
+    var btn = document.createElement("button");
+    btn.className = "pill";
+    btn.type = "button";
+    btn.setAttribute("aria-pressed", "false");
+    btn.innerHTML = icon(c.icon) + "<span>" + c.label + "</span>";
+    btn.addEventListener("click", function () {
+      if (state.selectedCats.has(c.key)) { state.selectedCats.delete(c.key); btn.setAttribute("aria-pressed", "false"); }
+      else { state.selectedCats.add(c.key); btn.setAttribute("aria-pressed", "true"); }
+      render();
+    });
+    pillRow.appendChild(btn);
+  });
+
+  var zipInput = document.getElementById("zipInput");
+  var zipError = document.getElementById("zipError");
+  var radiusSelect = document.getElementById("radiusSelect");
+  var keywordInput = document.getElementById("keywordInput");
+  var ageSelect = document.getElementById("ageSelect");
+  var statusLine = document.getElementById("statusLine");
+  var grid = document.getElementById("grid");
+  var favStatusLine = document.getElementById("favStatusLine");
+  var favGrid = document.getElementById("favGrid");
+  var recSection = document.getElementById("recSection");
+  var recGrid = document.getElementById("recGrid");
+  var browsePanel = document.getElementById("browsePanel");
+  var favoritesPanel = document.getElementById("favoritesPanel");
+  var tabBrowse = document.getElementById("tabBrowse");
+  var tabFavorites = document.getElementById("tabFavorites");
+  var favCountBadge = document.getElementById("favCountBadge");
+
+  document.getElementById("searchBtn").addEventListener("click", doSearch);
+  zipInput.addEventListener("keydown", function (e) { if (e.key === "Enter") doSearch(); });
+  zipInput.addEventListener("input", function () {
+    zipInput.value = zipInput.value.replace(/[^0-9]/g, "").slice(0, 5);
+  });
+  radiusSelect.addEventListener("change", function () {
+    state.radius = Number(radiusSelect.value);
+    if (state.search) render();
+  });
+  keywordInput.addEventListener("input", function () {
+    state.keyword = keywordInput.value.trim().toLowerCase();
+    render();
+  });
+  ageSelect.addEventListener("change", function () {
+    state.minAge = ageSelect.value;
+    render();
+  });
+  function setTab(tab) {
+    state.tab = tab;
+    tabBrowse.setAttribute("aria-selected", tab === "browse" ? "true" : "false");
+    tabFavorites.setAttribute("aria-selected", tab === "favorites" ? "true" : "false");
+    browsePanel.hidden = tab !== "browse";
+    favoritesPanel.hidden = tab !== "favorites";
+    render();
+  }
+  tabBrowse.addEventListener("click", function () { setTab("browse"); });
+  tabFavorites.addEventListener("click", function () { setTab("favorites"); });
+
+  function doSearch() {
+    var zip = zipInput.value.trim();
+    if (!/^[0-9]{5}$/.test(zip)) {
+      zipError.classList.add("show");
+      zipInput.focus();
+      return;
+    }
+    zipError.classList.remove("show");
+    var geo = geocode(zip);
+    state.search = { zip: zip, coords: geo.coords, approx: geo.approx };
+    render();
+  }
+
+  function clearSearch() {
+    state.search = null;
+    zipInput.value = "";
+    zipError.classList.remove("show");
+    render();
+  }
+
+  function formatMiles(m) {
+    if (m < 0.1) return "<0.1 mi";
+    return m.toFixed(1) + " mi";
+  }
+
+  function withDistances(items) {
+    if (!state.search) return items;
+    items.forEach(function (o) { o._dist = haversineMiles(state.search.coords, o.coords); });
+    return items;
+  }
+
+  function buildCard(o, reason) {
+    var cat = CAT_BY_KEY[o.cat];
+    var card = document.createElement("article");
+    card.className = "card";
+
+    var isFav = state.favorites.has(o.id);
+    var mediaHtml = '<div class="card-media" style="background:' + cat.grad + '">' + ILLOS[o.cat];
+    mediaHtml += '<button class="fav-btn" type="button" aria-pressed="' + (isFav ? "true" : "false") + '" aria-label="' +
+      (isFav ? "Remove from favorites" : "Add to favorites") + '">' + icon("heart") + '</button>';
+    if (state.search && typeof o._dist === "number") {
+      mediaHtml += '<span class="distance-badge"><span class="dot"></span>' + formatMiles(o._dist) + '</span>';
+    }
+    mediaHtml += '</div>';
+
+    card.innerHTML =
+      mediaHtml +
+      '<div class="card-body">' +
+        '<span class="cat-chip">' + cat.label + '</span>' +
+        '<h3 class="card-title">' + o.title + '</h3>' +
+        '<div class="org-row">' + icon("building") + '<span>' + o.org + '</span></div>' +
+        (reason ? '<p class="rec-reason">' + reason + '</p>' : "") +
+        '<p class="card-desc">' + o.desc + '</p>' +
+        '<div class="meta-rows">' +
+          '<div class="meta-row">' + icon("pin") + '<span>' + o.address + '</span></div>' +
+          '<div class="meta-row">' + icon("clock") + '<span>' + o.hours + '</span></div>' +
+          '<div class="meta-row">' + icon("cake") + '<span>' + o.ageLabel + '</span></div>' +
+        '</div>' +
+        '<a class="btn-cta" href="' + o.url + '" target="_blank" rel="noopener noreferrer">' + icon("globe") + 'Visit organization website</a>' +
+      '</div>';
+
+    card.querySelector(".fav-btn").addEventListener("click", function () { toggleFavorite(o.id); });
+    return card;
+  }
+
+  function renderItemsInto(container, items, reasons, emptyTitle, emptySub) {
+    container.innerHTML = "";
+    if (!items.length) {
+      var empty = document.createElement("div");
+      empty.className = "empty-state";
+      empty.innerHTML = "<strong>" + emptyTitle + "</strong>" + emptySub;
+      container.appendChild(empty);
+      return;
+    }
+    items.forEach(function (o) {
+      container.appendChild(buildCard(o, reasons ? reasons[o.id] : null));
+    });
+  }
+
+  // Content-based recommender: scores non-favorited opportunities by how often their
+  // category appears among the user's favorites, then breaks ties by proximity to the
+  // geographic centroid of those favorites.
+  function computeRecommendations() {
+    var favItems = OPPS.filter(function (o) { return state.favorites.has(o.id); });
+    if (!favItems.length) return { items: [], reasons: {} };
+
+    var catCount = {};
+    var lat = 0, lng = 0;
+    favItems.forEach(function (o) {
+      catCount[o.cat] = (catCount[o.cat] || 0) + 1;
+      lat += o.coords[0]; lng += o.coords[1];
+    });
+    var centroid = [lat / favItems.length, lng / favItems.length];
+
+    var candidates = OPPS.filter(function (o) { return !state.favorites.has(o.id); });
+    if (state.search) {
+      candidates = candidates.filter(function (o) {
+        o._dist = haversineMiles(state.search.coords, o.coords);
+        return o._dist <= state.radius;
+      });
+    }
+    if (state.minAge !== "") {
+      var maxAllowed = Number(state.minAge);
+      candidates = candidates.filter(function (o) { return o.minAge <= maxAllowed; });
+    }
+    candidates.forEach(function (o) {
+      var dist = haversineMiles(centroid, o.coords);
+      var proximityScore = Math.max(0, 1 - dist / 150);
+      o._recDist = dist;
+      o._recScore = (catCount[o.cat] || 0) * 3 + proximityScore;
+    });
+    candidates.sort(function (a, b) { return b._recScore - a._recScore; });
+
+    var top = candidates.slice(0, 6);
+    var reasons = {};
+    top.forEach(function (o) {
+      reasons[o.id] = catCount[o.cat]
+        ? "Because you favorited " + (catCount[o.cat] > 1 ? catCount[o.cat] + " " : "") + CAT_BY_KEY[o.cat].label + " opportunit" + (catCount[o.cat] > 1 ? "ies" : "y")
+        : "Near opportunities you've favorited";
+    });
+    return { items: top, reasons: reasons };
+  }
+
+  function render() {
+    favCountBadge.textContent = String(state.favorites.size);
+
+    // ---- Browse tab ----
+    var noFilters = !state.selectedCats.size && !state.keyword && state.minAge === "" && !state.search;
+    var items = noFilters ? RANDOM_ORDER.map(function (id) { return OPPS[id]; }) : OPPS.slice();
+    if (state.selectedCats.size) items = items.filter(function (o) { return state.selectedCats.has(o.cat); });
+    if (state.keyword) {
+      var k = state.keyword;
+      items = items.filter(function (o) {
+        return o.title.toLowerCase().indexOf(k) > -1 ||
+               o.org.toLowerCase().indexOf(k) > -1 ||
+               o.desc.toLowerCase().indexOf(k) > -1 ||
+               o.city.toLowerCase().indexOf(k) > -1 ||
+               CAT_BY_KEY[o.cat].label.toLowerCase().indexOf(k) > -1;
+      });
+    }
+    if (state.minAge !== "") {
+      var maxAllowed = Number(state.minAge);
+      items = items.filter(function (o) { return o.minAge <= maxAllowed; });
+    }
+
+    var approxNote = "";
+    if (state.search) {
+      items = withDistances(items);
+      items = items.filter(function (o) { return o._dist <= state.radius; });
+      items.sort(function (a, b) { return a._dist - b._dist; });
+      if (state.search.approx) {
+        approxNote = "We don't have an exact location for " + state.search.zip + " yet — showing approximate distances from the nearest known area.";
+      }
+    }
+
+    if (state.search) {
+      statusLine.innerHTML = "<strong>" + items.length + "</strong> " + (items.length === 1 ? "opportunity" : "opportunities") +
+        " near " + state.search.zip + ", closest first" +
+        ' <button class="clear-link" id="clearBtn" type="button">Clear ZIP</button>' +
+        (approxNote ? '<div class="approx-note">' + approxNote + '</div>' : "");
+      var cb = document.getElementById("clearBtn");
+      if (cb) cb.addEventListener("click", clearSearch);
+    } else {
+      statusLine.innerHTML = "<strong>" + items.length + "</strong> " + (items.length === 1 ? "opportunity" : "opportunities") + " listed across Maryland — enter a ZIP code to sort by distance";
+    }
+
+    renderItemsInto(grid, items, null,
+      "No opportunities match yet",
+      "Try clearing a filter, widening your search radius, or searching a different keyword.");
+
+    // ---- Favorites tab ----
+    if (state.tab === "favorites") {
+      var favItems = withDistances(OPPS.filter(function (o) { return state.favorites.has(o.id); }));
+      if (state.search) favItems.sort(function (a, b) { return a._dist - b._dist; });
+
+      favStatusLine.innerHTML = favItems.length
+        ? "<strong>" + favItems.length + "</strong> favorited " + (favItems.length === 1 ? "opportunity" : "opportunities") + (state.search ? ", closest first" : "")
+        : "";
+
+      renderItemsInto(favGrid, favItems, null,
+        "No favorites yet",
+        "Tap the heart on any card — in Browse or in your recommendations below — to save it here.");
+
+      var rec = computeRecommendations();
+      if (favItems.length) {
+        recSection.hidden = false;
+        renderItemsInto(recGrid, rec.items, rec.reasons,
+          "No recommendations match your filters",
+          "Try widening your ZIP radius or the age filter on the Browse tab.");
+      } else {
+        recSection.hidden = true;
+      }
+    }
+  }
+
+  render();
+})();
+</script>
+
+</body></html> 
