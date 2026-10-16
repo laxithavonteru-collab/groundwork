@@ -300,7 +300,106 @@
   }
   .tab-btn[aria-selected="true"] .tab-count { color: var(--gold-ink); background: var(--gold-soft); border-color: var(--gold-soft-border); }
 
-  #browsePanel, #favoritesPanel { margin-top: 1.5rem; }
+  #browsePanel, #favoritesPanel, #progressPanel { margin-top: 1.5rem; }
+
+  /* ---------- Progress tracker ---------- */
+  .progress-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.6rem 1.6rem 1.75rem;
+    box-shadow: 0 6px 18px var(--card-shadow);
+  }
+  .progress-top {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    gap: 1rem; flex-wrap: wrap;
+  }
+  .progress-kicker {
+    font-size: 0.72rem; letter-spacing: 0.05em; text-transform: uppercase;
+    color: var(--ink-mute); margin: 0 0 0.35rem;
+  }
+  .progress-hours { font-weight: 800; font-size: clamp(2rem, 5vw, 2.8rem); line-height: 1; margin: 0; letter-spacing: -0.015em; }
+  .progress-hours span { font-size: 1.05rem; font-weight: 600; color: var(--ink-mute); letter-spacing: 0; }
+  .progress-pct { font-weight: 800; font-size: 1.4rem; color: var(--gold-ink); }
+  .progress-track {
+    margin-top: 1.2rem;
+    height: 18px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, var(--gold), var(--gold-ink));
+    border-radius: 999px;
+    transition: width 0.5s cubic-bezier(.2,.8,.2,1);
+  }
+  .progress-fill.done { background: linear-gradient(90deg, #22b394, #0e8f76); }
+  .progress-msg { margin: 0.9rem 0 0; font-size: 0.95rem; color: var(--ink-soft); }
+  .progress-msg strong { color: var(--ink); }
+
+  .log-form {
+    margin-top: 1.5rem;
+    display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: flex-end;
+  }
+  .log-form label { display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.72rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink-mute); }
+  .log-form label.grow { flex: 1 1 240px; }
+  .log-form input {
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    border-radius: 10px;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 0.92rem;
+    padding: 0.7rem 0.85rem;
+    color: var(--ink);
+    outline: none;
+  }
+  .log-form input[type="number"] { width: 7rem; }
+  .log-form label[hidden] { display: none; }
+  .log-form .org-select {
+    width: 100%;
+    min-width: 0;
+    border: 1.5px solid var(--border);
+    background-color: var(--surface);
+    border-radius: 10px;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 0.92rem;
+    padding: 0.7rem 0.85rem;
+    color: var(--ink);
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  .log-form input, .log-form select { text-transform: none; letter-spacing: 0; }
+  .log-form .btn-search { padding: 0.75rem 1.2rem; }
+  .log-error { font-size: 0.78rem; color: #b5482f; margin: 0.5rem 0 0; display: none; }
+  .log-error.show { display: block; }
+
+  .log-heading { font-weight: 700; font-size: 1.15rem; margin: 2rem 0 0.75rem; }
+  .log-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; }
+  .log-item {
+    display: flex; align-items: center; gap: 0.9rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 0.75rem 0.9rem 0.75rem 1.1rem;
+  }
+  .log-item .log-org { flex: 1; font-weight: 600; font-size: 0.93rem; min-width: 0; overflow-wrap: anywhere; }
+  .log-item .log-date { font-size: 0.82rem; color: var(--ink-mute); white-space: nowrap; }
+  .log-item .log-hrs { font-weight: 700; font-size: 0.9rem; color: var(--gold-ink); white-space: nowrap; }
+  .log-del {
+    background: none; border: none; cursor: pointer; color: var(--ink-mute);
+    width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex: none;
+  }
+  .log-del:hover { color: var(--fav); background: var(--surface-2); }
+  .log-del:focus-visible { outline: 2.5px solid var(--focus); outline-offset: 2px; }
+  .log-del svg { width: 16px; height: 16px; }
+  @media (max-width: 520px) {
+    .log-item { flex-wrap: wrap; }
+    .log-item .log-org { flex-basis: 100%; }
+  }
+  .tabs { flex-wrap: wrap; column-gap: 1.85rem; row-gap: 0; }
 
   #recSection { margin-top: 3rem; }
   .rec-heading {
@@ -526,6 +625,7 @@
   <div class="tabs" role="tablist">
     <button class="tab-btn" id="tabBrowse" role="tab" type="button" aria-selected="true">Browse opportunities</button>
     <button class="tab-btn" id="tabFavorites" role="tab" type="button" aria-selected="false">My favorites <span class="tab-count" id="favCountBadge">0</span></button>
+    <button class="tab-btn" id="tabProgress" role="tab" type="button" aria-selected="false">My hours <span class="tab-count" id="hoursBadge">0 / 75</span></button>
   </div>
 
   <div id="browsePanel">
@@ -595,6 +695,44 @@
       <p class="rec-sub">Based on the categories and areas you've favorited, within your current ZIP radius and age filter.</p>
       <div class="grid" id="recGrid"></div>
     </div>
+  </div>
+
+  <div id="progressPanel" hidden>
+    <div class="progress-card">
+      <div class="progress-top">
+        <div>
+          <p class="progress-kicker">Graduation service hours</p>
+          <p class="progress-hours" id="hoursTotal">0 <span>/ 75 hours</span></p>
+        </div>
+        <div class="progress-pct" id="hoursPct">0%</div>
+      </div>
+      <div class="progress-track" role="progressbar" id="hoursBar" aria-label="Volunteer hours toward graduation" aria-valuemin="0" aria-valuemax="75" aria-valuenow="0">
+        <div class="progress-fill" id="hoursFill"></div>
+      </div>
+      <p class="progress-msg" id="hoursMsg"></p>
+
+      <form class="log-form" id="logForm" novalidate>
+        <label class="grow">Opportunity
+          <select id="logOrg" class="org-select">
+            <option value="">Choose an opportunity…</option>
+          </select>
+        </label>
+        <label class="grow" id="logOtherWrap" hidden>Other opportunity
+          <input id="logOther" type="text" placeholder="e.g. Church food drive">
+        </label>
+        <label>Date
+          <input id="logDate" type="date">
+        </label>
+        <label>Hours
+          <input id="logHours" type="number" min="0.25" max="24" step="0.25" placeholder="2">
+        </label>
+        <button class="btn-search" type="submit">Log hours</button>
+      </form>
+      <p class="log-error" id="logError">Choose an opportunity (or describe it under Other) and enter between 0.25 and 24 hours.</p>
+    </div>
+
+    <h2 class="log-heading">Logged hours</h2>
+    <ul class="log-list" id="logList"></ul>
   </div>
 
 </div>
@@ -720,7 +858,121 @@
     { title: "ReStore Volunteer", org: "Habitat for Humanity of Frederick County", cat: "other", city: "Frederick", zip: "21701", address: "917 North East Street, Frederick, MD 21701", desc: "Volunteers receive and process donated building materials, furniture and housewares, and assist with customer service and cashiering at the Frederick County ReStore.", hours: "Store open Tue–Sat 10am–5pm", minAge: 16, url: "https://frederickhabitat.org/get-involved/volunteer/" },
     { title: "ReStore Volunteer", org: "Allegany County Habitat for Humanity", cat: "other", city: "LaVale", zip: "21502", address: "28 Lane Avenue, LaVale, MD 21502", desc: "Volunteers help run the ReStore through customer-facing sales floor work or behind-the-scenes donation processing, supporting affordable-housing builds in Allegany County.", hours: "Thu–Fri 10am–6pm, Sat 10am–2pm", minAge: 0, url: "https://alleganycountyhfh.org/" },
     { title: "ReStore Retail Volunteer", org: "Habitat for Humanity Metro Maryland", cat: "other", city: "Rockville", zip: "20850", address: "1029 East Gude Drive, Rockville, MD 20850", desc: "Volunteers receive, clean, test, and merchandise donated furniture and household goods at the ReStore, with proceeds funding local affordable-housing builds.", hours: "Tue–Sat 10am–2pm or 2–5pm; Sun 11am–2pm or 2–5pm", minAge: 14, url: "https://habitatmm.org/restore/restore-volunteer.html" },
-    { title: "Thrift Store Volunteer", org: "Worcester County Humane Society", cat: "other", city: "Ocean City", zip: "21842", address: "12703 Sunset Avenue, Unit 5 & 6, West Ocean City, MD 21842", desc: "Volunteers sort, price, and sell donated goods at the shelter's thrift store, with proceeds supporting the no-kill shelter's animal-care programs.", hours: "Varies — see website for current openings", minAge: 16, url: "https://worcestercountyhumanesociety.org/" }
+    { title: "Thrift Store Volunteer", org: "Worcester County Humane Society", cat: "other", city: "Ocean City", zip: "21842", address: "12703 Sunset Avenue, Unit 5 & 6, West Ocean City, MD 21842", desc: "Volunteers sort, price, and sell donated goods at the shelter's thrift store, with proceeds supporting the no-kill shelter's animal-care programs.", hours: "Varies — see website for current openings", minAge: 16, url: "https://worcestercountyhumanesociety.org/" },
+
+    // ---- Maryland's 3rd Congressional District (Howard County, northern/central Anne Arundel, southern Carroll) ----
+    // Researched October 2026 from each organization's public volunteer pages and listings.
+    // minAge: null means the organization doesn't publish a minimum age — check with them directly.
+
+    { title: "Volunteer Naturalist (Field Trip Hike Leader)", org: "Howard County Conservancy", cat: "environment", city: "Woodstock", zip: "21163", address: "10520 Old Frederick Road, Woodstock, MD 21163", desc: "Volunteers are trained to lead school field-trip hikes at the Conservancy's Mt. Pleasant farm, sharing nature with K–12 students; free training is offered twice a year and no prior experience is needed.", hours: "Daytime field trips on weekdays; training each spring and fall", minAge: null, url: "https://www.howardnature.org/" },
+    { title: "Gardening Get-Together Stewardship Volunteer", org: "Robinson Nature Center (Howard County Recreation & Parks)", cat: "environment", city: "Columbia", zip: "21044", address: "6692 Cedar Lane, Columbia, MD 21044", desc: "Drop-in volunteers plant native wildflowers, pull invasive plants, care for native trees and shrubs, maintain trails and clean up trash around the nature center; students can earn service-learning hours.", hours: "Thursdays and Saturdays, 10am–noon", minAge: 0, url: "https://www.howardcountymd.gov/Departments/Recreation-and-Parks/Volunteering" },
+    { title: "Watershed Makeover Volunteer", org: "Howard EcoWorks", cat: "environment", city: "Columbia", zip: "21046", address: "9770 Patuxent Woods Drive, Suite 309, Columbia, MD 21046", desc: "Volunteers beautify neighborhoods and parks around Howard County by removing trash and invasive plants and caring for newly planted trees.", hours: "Scheduled event days — see website", minAge: null, url: "https://www.howardecoworks.org/" },
+    { title: "Native Seed Processing Volunteer", org: "Howard EcoWorks", cat: "environment", city: "Columbia", zip: "21046", address: "9770 Patuxent Woods Drive, Suite 309, Columbia, MD 21046", desc: "Volunteers clean, process and package native plant seeds that EcoWorks sells to raise funds and spread awareness of native plants.", hours: "Seasonal indoor work sessions — see website", minAge: null, url: "https://www.howardecoworks.org/" },
+    { title: "Trail Building & Maintenance Volunteer", org: "Friends of Patapsco Valley State Park", cat: "environment", city: "Ellicott City", zip: "21043", desc: "Volunteers survey, build and maintain trails in Patapsco Valley State Park through organized work days such as the Patapsco Fun Series, which logged over 2,500 volunteer hours in 2023.", hours: "Scheduled work days — see website", minAge: null, url: "https://www.fpvsp.org/" },
+    { title: "Master Gardener Volunteer", org: "University of Maryland Extension – Howard County Master Gardeners", cat: "environment", city: "Ellicott City", zip: "21042", address: "Whipps Garden Cemetery, 3651 St. John's Lane, Ellicott City, MD 21042", desc: "University-trained volunteers teach residents about sustainable gardening and tend demonstration gardens such as Whipps Garden, where weekly workdays run spring through fall.", hours: "Whipps Garden workdays Thursdays 9am–noon, March to mid-November", minAge: null, url: "https://www.extension.umd.edu/locations/howard-county/howard-county-environment-natural-resources/howard-county-master-gardener-program" },
+    { title: "Stream Waders Stream-Health Monitor", org: "Columbia Association", cat: "environment", city: "Columbia", zip: "21044", desc: "Volunteers sample Columbia streams for macroinvertebrates — insects that indicate overall stream health — while also measuring water chemistry and removing litter.", hours: "Each March and April", minAge: 0, url: "https://www.columbiaassociation.org/engage/volunteer" },
+    { title: "Pull & Plant and Tree Planting Volunteer", org: "Columbia Association", cat: "environment", city: "Columbia", zip: "21045", desc: "Volunteers learn to remove non-native invasive plants from Columbia's open space and replant with natives, and help plant trees for erosion control; under-18s may join with adult supervision.", hours: "Events year-round; tree plantings in spring and fall", minAge: 0, url: "https://www.columbiaassociation.org/engage/volunteer" },
+    { title: "Weed Warriors Volunteer Leader", org: "Columbia Association", cat: "environment", city: "Columbia", zip: "21046", desc: "After completing CA's training program, certified Weed Warriors supervise and lead volunteer groups on designated invasive-weed removal projects across Columbia's open space.", hours: "Flexible after certification", minAge: null, url: "https://www.columbiaassociation.org/engage/volunteer" },
+    { title: "Conservation Stewardship Invasive Removal", org: "Howard County Master Gardeners & Recreation and Parks", cat: "environment", city: "Clarksville", zip: "21029", desc: "Volunteers remove invasive exotic plants from the Middle Patuxent Environmental Area in a joint program of the Howard County Master Gardeners and Recreation & Parks.", hours: "4th Tuesday of each month, 9–11:30am", minAge: null, url: "https://www.howardcountymd.gov/Departments/Recreation-and-Parks/Volunteering" },
+    { title: "Oella & Ellicott City Entrance Garden Volunteer", org: "Patapsco Heritage Greenway", cat: "environment", city: "Ellicott City", zip: "21043", address: "6 Oella Avenue, Ellicott City, MD 21043", desc: "Volunteers weed, prune, mulch, deadhead and repair fencing at the riverside pollinator garden beside the Ellicott City bridge.", hours: "About 2 hours per week", minAge: 12, url: "https://www.patapsco.org/connect-with-us/volunteer/" },
+    { title: "Master Watershed Steward", org: "Watershed Stewards Academy (Anne Arundel County)", cat: "environment", city: "Millersville", zip: "21108", desc: "Residents complete 45–60 hours of classroom and field training, then help their neighborhoods reduce stormwater pollution by installing rain gardens, educating neighbors and maintaining small stormwater projects.", hours: "Training over about 18 months, plus a capstone project", minAge: null, url: "https://www.aawsa.org/" },
+    { title: "Park Events, Gardening & Invasive Removal Volunteer", org: "Friends of Quiet Waters Park", cat: "environment", city: "Annapolis", zip: "21403", desc: "Volunteers help run Quiet Waters Park's summer concerts, Earth Day and Fairy House Festival, and join seasonal gardening and invasive-plant removal.", hours: "Year-round, as events and seasons need", minAge: null, url: "https://fqwp.org/volunteer/" },
+    { title: "River Restoration & Water Monitoring Volunteer", org: "Arundel Rivers Federation", cat: "environment", city: "Edgewater", zip: "21037", desc: "Volunteers plant native plants, cage young trees, take weekly shoreline bacteria samples, kayak to survey underwater grasses, build oyster cages and staff outreach tables.", hours: "Varies by project — weekly sampling in season", minAge: null, url: "https://www.arundelrivers.org/volunteer" },
+    { title: "Water Quality Sampling Volunteer", org: "Spa Creek Conservancy", cat: "environment", city: "Annapolis", zip: "21403", desc: "Volunteers with this all-volunteer conservancy collect water samples from set sites along Spa Creek and Back Creek to track the health of Annapolis's urban waterways.", hours: "Thursday mornings", minAge: null, url: "https://www.spacreek.net/" },
+    { title: "Water Quality Monitoring Crew", org: "Severn River Association", cat: "environment", city: "Annapolis", zip: "21401", desc: "Volunteers go out on SRA's research boat to record dissolved oxygen, pH, salinity, temperature and clarity across dozens of stations from the Severn's headwaters to its mouth; no science degree is needed.", hours: "Mornings, three days a week, April–October", minAge: null, url: "https://www.severnriver.org/" },
+    { title: "Visitor Center Front Desk Volunteer", org: "Patuxent Research Refuge – North Tract (U.S. Fish & Wildlife Service)", cat: "environment", city: "Laurel", zip: "20724", address: "230 Bald Eagle Drive, Laurel, MD 20724", desc: "Volunteers greet visitors and staff the front desk at the North Tract, an 8,100-acre refuge with more than 20 miles of trails.", hours: "Varies — see website for current openings", minAge: null, url: "https://www.fws.gov/refuge/patuxent-research/get-involved" },
+    { title: "Invasive Plant Removal & Trail Monitor", org: "Patuxent Research Refuge – North Tract (U.S. Fish & Wildlife Service)", cat: "environment", city: "Laurel", zip: "20724", address: "230 Bald Eagle Drive, Laurel, MD 20724", desc: "Volunteers join ongoing short-term projects such as invasive plant removal, trail monitoring and grounds keeping at the refuge.", hours: "Ongoing short-term projects", minAge: null, url: "https://www.fws.gov/refuge/patuxent-research/get-involved" },
+    { title: "Junior Nature Center Volunteer", org: "Piney Run Park Nature Center (Carroll County Recreation & Parks)", cat: "environment", city: "Sykesville", zip: "21784", address: "30 Martz Road, Sykesville, MD 21784", desc: "Young volunteers help the nature center's staff and volunteer naturalists with programs, exhibits and events such as Nature Camp and the Apple Festival.", hours: "Varies — call 410-795-6043", minAge: 12, url: "https://www.carrollcountymd.gov/government/directory/recreation-parks/piney-run-park/" },
+
+    { title: "Animal Care Volunteer", org: "Howard County Animal Control & Adoption Center", cat: "animals", city: "Columbia", zip: "21045", address: "8576 Davis Road, Columbia, MD 21045", desc: "Volunteers give shelter animals exercise, affection and enrichment, and show them to visitors interested in adopting; open to Howard County residents.", hours: "Apply in person during service hours", minAge: 18, url: "https://www.howardcountymd.gov/animal-control" },
+    { title: "Barn Chore & Equine Care Volunteer", org: "Days End Farm Horse Rescue", cat: "animals", city: "Woodbine", zip: "21797", desc: "Volunteers help care for rescued horses through barn chores and equine care at this Howard County horse rescue, which welcomes volunteers of many ages through its programs.", hours: "Scheduled volunteer sessions — see website", minAge: null, url: "https://defhr.org/" },
+    { title: "Shelter Volunteer", org: "SPCA of Anne Arundel County", cat: "animals", city: "Annapolis", zip: "21403", address: "1815 Bay Ridge Avenue, Annapolis, MD 21403", desc: "Volunteers support the care and adoption of shelter animals at the SPCA's Annapolis campus.", hours: "Varies — see website for current openings", minAge: null, url: "https://www.aacspca.org/" },
+    { title: "Shelter Volunteer", org: "Anne Arundel County Animal Care & Control", cat: "animals", city: "Millersville", zip: "21108", address: "411 Maxwell Frye Road, Millersville, MD 21108", desc: "Volunteers handle and care for animals, show them to adopters, help customers and answer phones, and assist with filing, photography and multimedia.", hours: "16 hours per month minimum", minAge: 18, url: "https://www.aacounty.org/animal-care-control" },
+    { title: "Therapeutic Riding Volunteer", org: "Maryland Therapeutic Riding", cat: "animals", city: "Crownsville", zip: "21032", desc: "Volunteers help with horses and lessons on a 25-acre farm that serves children, adults, active-duty military and veterans with special needs through equine therapy.", hours: "Varies — call 410-923-6800", minAge: null, url: "https://www.horsesthatheal.org/" },
+
+    { title: "50+ Center & Program Volunteer", org: "Howard County Office on Aging & Independence", cat: "seniors", city: "Columbia", zip: "21045", desc: "Volunteers support older adults and people with disabilities by helping at Howard County's 50+ Centers, community outreach, social activities and events.", hours: "Varies — see HoCoVolunteer.org", minAge: null, url: "https://www.howardcountymd.gov/aging-independence" },
+    { title: "SHIP Medicare Counselor", org: "Howard County Office on Aging & Independence", cat: "seniors", city: "Columbia", zip: "21045", desc: "Trained volunteers give one-on-one counseling and workshops to help residents understand Medicare and prescription drug plans through the State Health Insurance Assistance Program.", hours: "Varies — see HoCoVolunteer.org", minAge: null, url: "https://www.howardcountymd.gov/aging-independence" },
+    { title: "Ride Partners Volunteer Driver", org: "Partners In Care Maryland", cat: "seniors", city: "Pasadena", zip: "21122", address: "8151-C Ritchie Highway, Pasadena, MD 21122", desc: "Volunteers use their own cars to drive members age 60+ to medical appointments, grocery stores, pharmacies and social outings; mileage reimbursement is available.", hours: "Flexible — choose rides that fit your schedule", minAge: null, url: "https://www.partnersincare.org/" },
+    { title: "Handyman & Social Connection Volunteer", org: "Partners In Care Maryland", cat: "seniors", city: "Pasadena", zip: "21122", address: "8151-C Ritchie Highway, Pasadena, MD 21122", desc: "Volunteers help older adults stay independent at home with small handyman jobs and social visits that combat isolation.", hours: "Flexible", minAge: null, url: "https://www.partnersincare.org/" },
+    { title: "Meal Delivery Driver (Glen Burnie)", org: "Meals on Wheels of Central Maryland", cat: "seniors", city: "Glen Burnie", zip: "21061", desc: "Volunteers pick up meals at the Robert A. Pascal Senior Center and deliver them to homebound neighbors in nearby apartments and homes.", hours: "Mon–Fri starting 10:30am; routes take about 1.5 hours", minAge: null, url: "https://mealsonwheelsmd.org/volunteer/meal-delivery/" },
+    { title: "Meal Delivery Driver (Severna Park)", org: "Meals on Wheels of Central Maryland", cat: "seniors", city: "Severna Park", zip: "21146", desc: "Volunteers pick up meals at Woods Memorial Presbyterian Church and deliver them to homebound neighbors in local apartments and homes.", hours: "Mon–Fri starting 10:30am; routes take about 1.5 hours", minAge: null, url: "https://mealsonwheelsmd.org/volunteer/meal-delivery/" },
+
+    { title: "Food Bank Volunteer", org: "Community Action Council of Howard County", cat: "food", city: "Columbia", zip: "21046", address: "9385 Gerwig Lane, Suite J, Columbia, MD 21046", desc: "Volunteers sort and stock food, assist shoppers and help with administrative tasks at the Howard County Food Bank; groups of 8–10 can also book sessions.", hours: "Individual and group shifts — call 410-313-6440", minAge: 16, url: "https://www.cac-hc.org/" },
+    { title: "Community Garden Volunteer", org: "Community Action Council of Howard County", cat: "food", city: "Columbia", zip: "21046", address: "9385 Gerwig Lane, Suite J, Columbia, MD 21046", desc: "Volunteers help maintain CAC's community garden, which grows fresh produce for families served by the Howard County Food Bank.", hours: "Growing season — call 410-313-6440", minAge: 16, url: "https://www.cac-hc.org/" },
+    { title: "Saturday Grocery Distribution Volunteer", org: "Columbia Community Care", cat: "food", city: "Columbia", zip: "21045", desc: "This all-volunteer group needs help staffing its Saturday-morning grocery and produce distributions at Long Reach Village Center, Wilde Lake Interfaith Center and Oakland Mills.", hours: "Saturday mornings", minAge: null, url: "https://www.columbiacommunitycare.org/" },
+    { title: "Warehouse Volunteer", org: "Anne Arundel County Food Bank", cat: "food", city: "Crownsville", zip: "21032", address: "120 Marbury Drive, Crownsville, MD 21032", desc: "Volunteers sort and pack donated food at the county's central food bank, which supplies pantries throughout Anne Arundel County.", hours: "Shift-based, sign up online", minAge: null, url: "https://www.aafoodbank.org/" },
+    { title: "Volunteer Box Truck Driver", org: "Anne Arundel County Food Bank", cat: "food", city: "Crownsville", zip: "21032", address: "120 Marbury Drive, Crownsville, MD 21032", desc: "Experienced drivers pick up food donations in 18–22 ft box trucks; requires a clean driving record, a DOT physical and the ability to lift 50 lbs.", hours: "Mon–Fri, 8am–2:30pm", minAge: 26, url: "https://www.aafoodbank.org/" },
+    { title: "Weekend Lunch Prep & Distribution", org: "Happy Helpers for the Homeless", cat: "food", city: "Glen Burnie", zip: "21060", address: "Harundale Presbyterian Church, 1020 Eastway, Glen Burnie, MD 21060", desc: "Volunteers make bagged lunches and food boxes at the Halethorpe headquarters, then hand out sandwiches and supplies to neighbors in need in Glen Burnie.", hours: "Saturdays, 11:30am–about 2pm", minAge: null, url: "https://www.happyhelpersforthehomeless.com/" },
+    { title: "Food Pantry Volunteer", org: "Mount Airy Net", cat: "food", city: "Mount Airy", zip: "21771", address: "Mt. Airy Baptist Church, 1402 N. Main Street, Mount Airy, MD 21771", desc: "Volunteers help run this community food pantry, a cooperative network of churches, civic groups and residents serving the Mount Airy area.", hours: "Pantry open Tue–Thu, 10am–2pm", minAge: null, url: "https://www.mtairynet.org/" },
+
+    { title: "Adult Literacy & ESL Instructor", org: "Howard County Library System – Project Literacy", cat: "education", city: "Columbia", zip: "21044", desc: "Volunteer instructors teach reading, writing, speaking and listening to adults working toward a high school diploma or learning English; a bachelor's degree, orientation and 8 hours of annual training are required.", hours: "2–4 hours per week for at least 6 months", minAge: null, url: "https://hclibrary.org/support-us/project-literacy-volunteer" },
+    { title: "Club LEAP After-School English Tutor", org: "Luminus Network for New Americans", cat: "education", city: "Columbia", zip: "21044", desc: "Volunteers plan and lead English-enrichment activities for immigrant elementary and middle school students; no teaching experience needed and training is provided.", hours: "After school — see website", minAge: null, url: "https://www.beluminus.org/" },
+    { title: "Adult English Tutor", org: "Luminus Network for New Americans", cat: "education", city: "Columbia", zip: "21044", desc: "Volunteers are matched one-on-one with adult immigrants learning English through the Adult English Tutoring Academy; training is provided.", hours: "Flexible, by arrangement with your learner", minAge: null, url: "https://www.beluminus.org/" },
+    { title: "Court Appointed Special Advocate (CASA)", org: "Voices for Children of Howard County", cat: "education", city: "Ellicott City", zip: "21043", address: "8358 Main Street, 2nd Floor, Ellicott City, MD 21043", desc: "Trained volunteers advocate in court for abused and neglected children in Howard County, giving judges background and recommendations and offering the child steady support.", hours: "1-year commitment", minAge: 21, url: "https://www.voicesforchildren.org/" },
+    { title: "Court Appointed Special Advocate (CASA)", org: "Anne Arundel County CASA", cat: "education", city: "Annapolis", zip: "21401", desc: "Volunteers are appointed to children in foster care, visit them regularly, gather information from everyone in the child's life, write court reports and testify on the child's behalf.", hours: "1-year commitment", minAge: 21, url: "https://www.aacasa.org/" },
+    { title: "Youth Mentor", org: "Seeds 4 Success", cat: "education", city: "Annapolis", zip: "21401", desc: "Mentors support Annapolis students from low-income households with homework help and encouragement in programs for elementary (LEARN), middle (DREAM) and high school (GROW) students; training and background check provided.", hours: "1–2.5 hours per week after school (Tue, Wed or Thu)", minAge: null, url: "https://seeds4success.org/" },
+    { title: "Youth Program Volunteer", org: "Boys & Girls Clubs of Annapolis & Anne Arundel County", cat: "education", city: "Glen Burnie", zip: "21061", desc: "Volunteers support youth programs at clubs in Annapolis, Glen Burnie, Pasadena and Severn in short- or long-term roles matched to their skills; background check and training required.", hours: "Varies — call 410-263-2542", minAge: 18, url: "https://www.bgcaa.org/" },
+    { title: "Volunteen Summer Library Helper", org: "Anne Arundel County Public Library", cat: "education", city: "Glen Burnie", zip: "21061", desc: "Teens help branches run the summer reading program, and adult volunteers can help unpack books, prepare craft materials and assist with special projects.", hours: "Teens recruited each spring; adult roles prefer a 6-month commitment", minAge: 14, url: "https://www.aacpl.net/volunteer" },
+    { title: "Teen Library Volunteer & Teen Advisory Board", org: "Carroll County Public Library – Eldersburg", cat: "education", city: "Eldersburg", zip: "21784", desc: "Teens volunteer at the branch year-round, and those 12–18 can join the Teen Advisory Board to plan teen programs and help shape teen collections.", hours: "Teen Advisory Board meets 3rd Thursday, 6–7:30pm", minAge: 14, url: "https://library.carr.org/kids-teens/volunteer" },
+    { title: "4-H Volunteer Club Leader", org: "University of Maryland Extension – Howard County 4-H", cat: "education", city: "Ellicott City", zip: "21042", desc: "Adult volunteers lead and support 4-H clubs where Howard County youth build skills in projects ranging from livestock to STEM, many of which are shown at the county fair.", hours: "Varies by club — call 410-313-2707", minAge: null, url: "https://extension.umd.edu/locations/howard-county/howard-county-4-h-youth-development/howard-county-4-h-clubs" },
+
+    { title: "Hospital Volunteer", org: "Johns Hopkins Howard County Medical Center", cat: "health", city: "Columbia", zip: "21044", address: "5755 Cedar Lane, Columbia, MD 21044", desc: "Volunteers visit patients, help families and visitors find their way, staff the gift shop and support health-promotion events and the Cancer Resource Center.", hours: "At least 4 hours per week (or 100 hours minimum)", minAge: 15, url: "https://www.hopkinsmedicine.org/volunteer-services/howard-county" },
+    { title: "Hospice Volunteer", org: "Gilchrist Center Howard County", cat: "health", city: "Columbia", zip: "21044", address: "6336 Cedar Lane, Columbia, MD 21044", desc: "Volunteers offer companionship to hospice patients and families, deliver meals, bake on-site and sew memory bears for grieving loved ones.", hours: "Varies — see website for current openings", minAge: null, url: "https://gilchristcares.org/" },
+    { title: "Auxiliary Hospital Volunteer", org: "Luminis Health Anne Arundel Medical Center", cat: "health", city: "Annapolis", zip: "21401", desc: "Auxiliary members serve in more than 30 roles across the hospital and community sites, from guiding patients and visitors to supporting clinical staff and fundraising.", hours: "One weekly shift, typically 9am–12:30pm or 12:30–4pm", minAge: 18, url: "https://www.luminishealth.org/en/volunteer/aamc-auxiliary" },
+    { title: "Student Hospital Volunteer", org: "Luminis Health Anne Arundel Medical Center", cat: "health", city: "Annapolis", zip: "21401", desc: "High school, college and graduate students interested in healthcare volunteer in hospital departments through Luminis Health's student program.", hours: "Varies by term — see website", minAge: 16, url: "https://www.luminishealth.org/en/volunteer/student-volunteers" },
+    { title: "Adult Hospital Volunteer", org: "University of Maryland Baltimore Washington Medical Center", cat: "health", city: "Glen Burnie", zip: "21061", address: "301 Hospital Drive, Glen Burnie, MD 21061", desc: "Volunteers greet and visit patients, help people find their way, stock supplies and nourishment areas, and assemble patient information packets.", hours: "At least 4 hours per week for 6 months", minAge: 18, url: "https://www.umms.org/bwmc/giving/volunteer-opportunities" },
+    { title: "Student Hospital Volunteer", org: "University of Maryland Baltimore Washington Medical Center", cat: "health", city: "Glen Burnie", zip: "21061", address: "301 Hospital Drive, Glen Burnie, MD 21061", desc: "High school and college students volunteer in hospital departments during spring, summer and fall terms and earn hours toward school graduation requirements.", hours: "Spring, summer and fall terms", minAge: 16, url: "https://www.umms.org/bwmc/giving/volunteer-opportunities" },
+    { title: "Crisis Center & Shelter Volunteer", org: "Grassroots Crisis Intervention Center", cat: "health", city: "Columbia", zip: "21044", address: "6700 Freetown Road, Columbia, MD 21044", desc: "Volunteers support Howard County's 24-hour crisis intervention center and emergency shelters for families and individuals; apply online and interview by phone or video.", hours: "Varies — email mont@grassrootscrisis.org", minAge: null, url: "https://grassrootscrisis.org/" },
+    { title: "Day Resource Center Volunteer", org: "Grassroots Crisis Intervention Center", cat: "community", city: "Jessup", zip: "20794", desc: "Volunteers help at Grassroots' Day Resource Center, which serves people experiencing homelessness in Howard County.", hours: "Varies — email mont@grassrootscrisis.org", minAge: null, url: "https://grassrootscrisis.org/" },
+    { title: "Helpline & Advocacy Volunteer", org: "HopeWorks of Howard County", cat: "health", city: "Columbia", zip: "21045", desc: "After a two-day training on domestic and sexual violence, volunteers support survivors through HopeWorks' 24/7 helpline and advocacy programs.", hours: "Varies — two-day training required", minAge: null, url: "https://hopeworksofhc.org/" },
+    { title: "Front Office, Childcare & Outreach Volunteer", org: "HopeWorks of Howard County", cat: "community", city: "Columbia", zip: "21045", desc: "Volunteers greet visitors in the front office, provide childcare while clients attend services, and help with community outreach on preventing violence.", hours: "Varies — see website", minAge: null, url: "https://hopeworksofhc.org/" },
+    { title: "Crisis Hotline & Hospital Accompaniment Volunteer", org: "YWCA of Annapolis and Anne Arundel County", cat: "health", city: "Arnold", zip: "21012", address: "1517 Ritchie Highway, Arnold, MD 21012", desc: "Trained volunteers staff the YWCA's 24-hour crisis hotline and accompany survivors of sexual assault to medical appointments; office volunteers help with data entry and mailings.", hours: "Varies — email volunteer@ywcaaac.org", minAge: null, url: "https://www.ywcaaac.org/" },
+    { title: "Volunteer Corps Member", org: "Howard County Autism Society", cat: "health", city: "Columbia", zip: "21046", address: "10280 Old Columbia Road, Suite 215, Columbia, MD 21046", desc: "Volunteers help run HCAS's support programs, awareness events and community partnerships for autistic people and their families.", hours: "Throughout the year — see website", minAge: null, url: "https://www.howard-autism.org/" },
+    { title: "Home Visitor & Program Monitor", org: "The Arc of Howard County", cat: "health", city: "Ellicott City", zip: "21043", desc: "Volunteers visit people with intellectual and developmental disabilities in their homes to share hobbies, or are trained as monitors who observe and report on the quality of support services.", hours: "Visitors 1–2 hours twice a month; monitors about 2 hours a month", minAge: null, url: "https://www.archoward.org/" },
+    { title: "Sports Coach & Volunteer", org: "Special Olympics Maryland – Howard County", cat: "health", city: "Columbia", zip: "21044", desc: "Volunteers coach and mentor athletes with intellectual disabilities in sports like swimming and skiing, with training and certification provided.", hours: "Varies by sport season", minAge: null, url: "https://www.somd.org/" },
+
+    { title: "Volunteer Mover & Errand Runner", org: "Bridges to Housing Stability", cat: "community", city: "Columbia", zip: "21046", address: "9520 Berger Road, Suite 311, Columbia, MD 21046", desc: "Volunteers help clients move furniture into their new homes and run errands for clients with limited transportation; errand runners need a driver's license and background check.", hours: "Weekday or weekend daytime, a few hours a month", minAge: 18, url: "https://bridges2hs.org/" },
+    { title: "Shelter Meals & Program Volunteer", org: "Annapolis Light House", cat: "community", city: "Annapolis", zip: "21401", address: "10 Hudson Street, Annapolis, MD 21401", desc: "Volunteers prepare bagged lunches and dinners, help in the pantry and office, support the children's program and teach job skills like interviewing and resume writing.", hours: "Flexible; training provided", minAge: 18, url: "https://www.annapolislighthouse.org/" },
+    { title: "Lunch Preparation & Serving Volunteer", org: "Arundel House of Hope", cat: "community", city: "Glen Burnie", zip: "21061", address: "514 North Crain Highway, Glen Burnie, MD 21061", desc: "Volunteers prepare and serve lunch to guests and residents of this ecumenical organization providing emergency, transitional and permanent housing for people experiencing homelessness.", hours: "Varies — see website", minAge: null, url: "https://www.arundelhoh.org/" },
+    { title: "Childcare & Homework Help Volunteer", org: "Sarah's House (Catholic Charities)", cat: "community", city: "Fort Meade", zip: "20755", address: "2015 20th Street, Fort Meade, MD 20755", desc: "Volunteers provide childcare while parents attend training classes and tutor children with homework at this emergency shelter for families.", hours: "Shift times vary; homework help during the school year", minAge: 16, url: "https://cc-md.org/sarahshouse" },
+    { title: "Grounds & Donations Volunteer", org: "Sarah's House (Catholic Charities)", cat: "community", city: "Fort Meade", zip: "20755", address: "2015 20th Street, Fort Meade, MD 20755", desc: "Volunteers do outdoor lawn and garden work, organize donations and assemble health and hygiene kits for families staying at the shelter.", hours: "Shift times vary by task", minAge: 16, url: "https://cc-md.org/sarahshouse" },
+    { title: "Home Repair Volunteer", org: "Rebuilding Together Anne Arundel County", cat: "community", city: "Severna Park", zip: "21146", address: "819 Ritchie Highway, Suite 2000, Severna Park, MD 21146", desc: "Skilled tradespeople and general volunteers make free repairs — roofing, painting, yard work and more — for older, disabled and veteran homeowners and families with children.", hours: "Project days throughout the year", minAge: null, url: "https://www.rebuildingtogetheraac.org/" },
+    { title: "Fair Volunteer", org: "Howard County Fair", cat: "community", city: "West Friendship", zip: "21794", address: "2210 Fairgrounds Road, West Friendship, MD 21794", desc: "Volunteers keep the week-long county fair running — taking tickets at the gates, supervising areas and helping display 4-H exhibits.", hours: "Fair week each August", minAge: null, url: "https://www.howardcountyfair.com/" },
+    { title: "Youth Sports Coach & Event Volunteer", org: "Howard County Recreation & Parks", cat: "community", city: "Columbia", zip: "21044", desc: "Volunteers coach youth sports, help at local events and festivals, maintain parks and support youth programs in one-time or ongoing roles.", hours: "One-time and ongoing roles", minAge: null, url: "https://www.howardcountymd.gov/Departments/Recreation-and-Parks/Volunteering" },
+    { title: "Visitor Center Information Specialist", org: "Visit Annapolis & Anne Arundel County", cat: "community", city: "Annapolis", zip: "21401", address: "26 West Street, Annapolis, MD 21401", desc: "Volunteers welcome visitors at the West Street Visitors Center and a seasonal City Dock booth, sharing maps, tips and information about Annapolis and Anne Arundel County.", hours: "Four-hour shifts, at least 3 times a month", minAge: 21, url: "https://visitannapolis.org/about-us/our-team/visitor-center-volunteers" },
+    { title: "Hayride Assistant & Farmhouse Greeter", org: "Friends of Kinder Farm Park", cat: "community", city: "Millersville", zip: "21108", desc: "Volunteers load and unload passengers on monthly hayrides, greet visitors at the historic farmhouse and help with events like the Jingle Bell Hayride.", hours: "Event days; farmhouse open 2nd Saturday monthly", minAge: null, url: "https://kinderfarmpark.org/volunteer.html" },
+    { title: "Volunteers-in-the-Park & Garden Volunteer", org: "Downs Park (Anne Arundel County Recreation & Parks)", cat: "community", city: "Pasadena", zip: "21122", desc: "Volunteers join the Friends of Downs Park, garden volunteers or Volunteers-in-the-Park to help care for this year-round waterfront park on the Chesapeake Bay.", hours: "Varies — contact the park", minAge: null, url: "https://www.aacounty.org/node/680" },
+
+    { title: "Living History Volunteer", org: "B&O Railroad Museum: Ellicott City Station", cat: "arts", city: "Ellicott City", zip: "21043", address: "3711 Maryland Avenue, Ellicott City, MD 21043", desc: "Volunteers — many in 19th-century costume — bring the oldest surviving passenger railroad station in the U.S. to life for visitors.", hours: "Varies — call 410-313-2924", minAge: null, url: "https://www.howardcountymd.gov/Departments/Recreation-and-Parks/Volunteering" },
+    { title: "Museum & Archives Volunteer", org: "Howard County Historical Society", cat: "arts", city: "Ellicott City", zip: "21043", address: "8328 Court Avenue, Ellicott City, MD 21043", desc: "Volunteers help at the Museum of Howard County History with archival collections, events, fundraising and visitor programs.", hours: "As much time as you like", minAge: null, url: "https://www.hchsmd.org/" },
+    { title: "Arts Council Volunteer", org: "Howard County Arts Council (HoCo Arts)", cat: "arts", city: "Ellicott City", zip: "21043", address: "8360 Court Avenue, Ellicott City, MD 21043", desc: "Volunteers support HoCo Arts' exhibitions, events and programs at its new home in the historic courthouse in Old Ellicott City.", hours: "Varies — see website", minAge: null, url: "https://www.hocoarts.org/support" },
+    { title: "Museum Living Collections Volunteer", org: "Annapolis Maritime Museum & Park", cat: "arts", city: "Annapolis", zip: "21403", address: "723 Second Street, Annapolis, MD 21403", desc: "Volunteers help with museum programs and care for live Chesapeake Bay animals — from hand-feeding horseshoe crabs to testing tank water — at the McNasby Oyster House campus and Ellen O. Moyer Nature Park.", hours: "Varies — sign up at amaritime.org", minAge: null, url: "https://www.amaritime.org/" },
+    { title: "Paca House Docent", org: "Historic Annapolis", cat: "arts", city: "Annapolis", zip: "21401", desc: "Docents lead public and group tours of the William Paca House, home of a signer of the Declaration of Independence, sharing the story of the house and early Annapolis life.", hours: "Weekdays and weekends; training each March and August", minAge: null, url: "https://www.annapolis.org/support/volunteer/" },
+    { title: "Museum Docent", org: "Hammond-Harwood House", cat: "arts", city: "Annapolis", zip: "21401", desc: "Docents guide visitors through this 18th-century decorative arts house museum after three shadowing days and four two-hour classes.", hours: "Training in spring and fall", minAge: null, url: "https://hammondharwoodhouse.org/get-involved/volunteer/" },
+    { title: "Garden, Family Event & School Tour Volunteer", org: "Hammond-Harwood House", cat: "arts", city: "Annapolis", zip: "21401", desc: "Volunteers help in the museum's garden, run activity booths at family programs and assist with spring school-group tours and hands-on activities.", hours: "Seasonal", minAge: null, url: "https://hammondharwoodhouse.org/get-involved/volunteer/" },
+    { title: "Gallery Guide / Docent", org: "Banneker-Douglass-Tubman Museum", cat: "arts", city: "Annapolis", zip: "21401", address: "84 Franklin Street, Annapolis, MD 21401", desc: "Gallery guides lead school and daily tours and help with special programs at Maryland's official museum of African American heritage.", hours: "Training: four Saturdays, 2–3 hours each, in spring and fall", minAge: 17, url: "https://bdmuseum.maryland.gov/volunteer/" },
+    { title: "Collections Digitizing & Office Volunteer", org: "Banneker-Douglass-Tubman Museum", cat: "arts", city: "Annapolis", zip: "21401", address: "84 Franklin Street, Annapolis, MD 21401", desc: "Volunteers photograph objects for the museum's collections database, help with front desk and office work, and promote the museum through outreach and social media.", hours: "Rolling applications", minAge: 17, url: "https://bdmuseum.maryland.gov/volunteer/" },
+    { title: "Museum Docent", org: "Chesapeake Children's Museum", cat: "arts", city: "Annapolis", zip: "21403", address: "25 Silopanna Road, Annapolis, MD 21403", desc: "Docents help families explore hands-on exhibits about the Chesapeake Bay watershed at this children's museum and five-acre park on Spa Creek.", hours: "Weekly 2–3 hour shifts between 10am–4pm, including weekends", minAge: null, url: "https://theccm.org/" },
+    { title: "Museum Volunteer", org: "National Electronics Museum", cat: "arts", city: "Linthicum", zip: "21090", address: "1745 West Nursery Road, Linthicum, MD 21090", desc: "Volunteers help run this museum of radar, communications and electronics history; more than 30 volunteers give over 5,000 hours a year.", hours: "Varies — see website", minAge: null, url: "https://www.nationalelectronicsmuseum.org/" },
+    { title: "Historic House Docent", org: "Ann Arrundell County Historical Society (Benson-Hammond House)", cat: "arts", city: "Linthicum", zip: "21090", desc: "Docents lead tours of the 1820s Benson-Hammond House and explain the history of truck farming in northern Anne Arundel County.", hours: "Varies — call 410-768-9518", minAge: null, url: "https://aachs.org/volunteers/" },
+    { title: "Museum Volunteer", org: "Gate House Museum of History (Town of Sykesville)", cat: "arts", city: "Sykesville", zip: "21784", address: "7283 Cooper Drive, Sykesville, MD 21784", desc: "Volunteers help with research, programs and the archive at this museum of Sykesville and Springfield Hospital history.", hours: "Varies — call 410-549-5150", minAge: null, url: "https://townofsykesville.org/2157/Gate-House-Museum-of-History" },
+    { title: "Opera Outreach & Events Volunteer", org: "Annapolis Opera", cat: "arts", city: "Annapolis", zip: "21401", desc: "Volunteers help with publicity, school outreach, ad sales, office work and the opera's vocal competitions and auditions.", hours: "Varies — call 410-267-8135", minAge: 16, url: "https://www.annapolisopera.org/" },
+
+    { title: "Junior Firefighter Program", org: "Sykesville-Freedom District Fire Department", cat: "disaster", city: "Sykesville", zip: "21784", desc: "Young people learn firefighting and EMS basics, train with real equipment and compete at Carroll County Junior Day in one of the county's oldest junior programs.", hours: "1st and 3rd Wednesdays of each month", minAge: 12, url: "https://www.sykesvillefire.org/content/junior" },
+    { title: "Volunteer Firefighter / EMT", org: "Sykesville-Freedom District Fire Department", cat: "disaster", city: "Sykesville", zip: "21784", desc: "This volunteer-driven department provides fire and EMS service to Sykesville and Eldersburg and offers full training and equipment to new members.", hours: "Varies — call 410-795-8021", minAge: null, url: "https://www.sykesvillefire.org/content/recruit/" },
+    { title: "Volunteer Firefighter, EMS or Support Member", org: "Mount Airy Volunteer Fire Company", cat: "disaster", city: "Mount Airy", zip: "21771", address: "702 N. Main Street, Mount Airy, MD 21771", desc: "Members train for free as firefighters and EMS providers, or help with fundraising, public relations and work details if they prefer a non-emergency role.", hours: "Varies — stop by the station for an application", minAge: null, url: "https://www.mavfc.org/content/recruit/" },
+    { title: "Junior Fire Company Member", org: "Mount Airy Volunteer Fire Company", cat: "disaster", city: "Mount Airy", zip: "21771", address: "702 N. Main Street, Mount Airy, MD 21771", desc: "Juniors learn firefighting and EMS skills, leadership and teamwork while earning community service hours.", hours: "Varies — see website", minAge: 12, url: "https://www.mavfc.org/content/juniors" },
+    { title: "Volunteer Firefighter / EMS", org: "West Friendship Volunteer Fire Department", cat: "disaster", city: "West Friendship", zip: "21794", address: "12535 Old Frederick Road, Sykesville, MD 21784", desc: "Volunteers serve western Howard County from Station 3; tours and gear try-ons are offered to people interested in joining.", hours: "Varies — email info@wfvfd.org", minAge: null, url: "https://www.wfvfd.org/" },
+    { title: "Volunteer Firefighter / EMS", org: "Lisbon Volunteer Fire Company", cat: "disaster", city: "Woodbine", zip: "21797", address: "16104 Frederick Road, Woodbine, MD 21797", desc: "Volunteers serve western Howard County from Station 4, with training provided to new members.", hours: "Varies — email joinus@lisbonvfc.org", minAge: null, url: "https://www.lisbonvfc.org/" },
+    { title: "Volunteer Firefighter / EMS", org: "Fifth District Volunteer Fire Department", cat: "disaster", city: "Clarksville", zip: "21029", address: "5000 Signal Bell Lane, Clarksville, MD 21029", desc: "Volunteers serve the Clarksville area from Station 5, one of Howard County's volunteer fire departments.", hours: "Varies — call 410-313-7305", minAge: null, url: "https://www.howardcountymd.gov/fire-and-rescue-services/fire-department-partners" },
+
+    { title: "ReStore Volunteer", org: "Habitat for Humanity of the Chesapeake – Glen Burnie ReStore", cat: "other", city: "Glen Burnie", zip: "21060", address: "595 E. Ordnance Road, Glen Burnie, MD 21060", desc: "Volunteers receive donations, load trucks, assemble and price items, stock shelves and help customers; ages 14–15 need a chaperone.", hours: "Morning shift 10:30am–2pm", minAge: 14, url: "https://www.habitatchesapeake.org/" },
+    { title: "Food Pantry Volunteer", org: "Christian Assistance Program", cat: "food", city: "Odenton", zip: "21113", address: "8397 Piney Orchard Parkway, Odenton, MD 21113", desc: "Volunteers register and serve clients and pick up groceries for this church-founded pantry serving about 180 families a month in Odenton, Severn, Gambrills, Jessup and Hanover.", hours: "Pantry open Tue 11am–1pm and Thu 3–5pm", minAge: null, url: "https://www.stjosephodenton.org/christian-assistance/" },
+    { title: "Main Street Events Volunteer", org: "Ellicott City Partnership", cat: "community", city: "Ellicott City", zip: "21043", address: "8267 Main Street, Ellicott City, MD 21043", desc: "Volunteers help run year-round events in the Ellicott City Historic District, such as SpringFest and the Saturday farmers market in Tiber Park.", hours: "Event days throughout the year", minAge: null, url: "https://www.visitoldellicottcity.com/" },
+    { title: "Teen Library Volunteer", org: "Howard County Library System", cat: "education", city: "Elkridge", zip: "21075", desc: "Teens help families sign up for summer reading, hand out prizes and assist instructors with classes at branches including Central, East Columbia, Elkridge, Glenwood, Miller and Savage; trainings count for Student Service Learning hours.", hours: "Mostly summer; training sessions in spring", minAge: 14, url: "https://hclibrary.org/" },
+    { title: "Red Kettle Bell Ringer", org: "The Salvation Army – Annapolis Corps", cat: "community", city: "Annapolis", zip: "21401", desc: "Volunteers ring bells at Red Kettles in Annapolis, Severna Park, Arnold and Crofton to raise funds for the Corps' food pantry, clothing closet and family assistance.", hours: "Holiday season; pick your own date and location", minAge: null, url: "https://www.registertoring.com/" },
+    { title: "Garden & Trail Volunteer", org: "Howard County Conservancy", cat: "environment", city: "Woodstock", zip: "21163", address: "10520 Old Frederick Road, Woodstock, MD 21163", desc: "Volunteers help with gardening, trail maintenance and children's craft activities at the Conservancy's Mt. Pleasant farm.", hours: "Varies — email volunteer@howardnature.org", minAge: null, url: "https://www.howardnature.org/" },
+    { title: "Volunteer Firefighter, EMT or Admin Support", org: "Howard County Department of Fire and Rescue Services", cat: "disaster", city: "Elkridge", zip: "21075", address: "5700 Rowanberry Drive, Elkridge, MD 21075", desc: "Volunteers serve as firefighters, EMTs or administrative support, with all training for firefighter, EMT and paramedic certification provided.", hours: "Varies — call 410-313-4901", minAge: 16, url: "https://www.howardcountymd.gov/fire-and-rescue-services/fire-department-partners" }
   ];
 
   // Approximate coordinates for the ZIP codes above (demo-grade, city-level accuracy).
@@ -740,7 +992,15 @@
     "21403": [38.9556, -76.4880], "21502": [39.6512, -78.8228], "21550": [39.4084, -79.4136],
     "21601": [38.7746, -76.0763], "21660": [38.9548, -75.8836], "21701": [39.4143, -77.4105],
     "21740": [39.6418, -77.7200], "21801": [38.3607, -75.5994], "21811": [38.3223, -75.2166],
-    "21842": [38.3459, -75.0849]
+    "21842": [38.3459, -75.0849],
+    // MD-03 additions
+    "20724": [39.1010, -76.8030], "20755": [39.1080, -76.7430], "20794": [39.1490, -76.7750],
+    "21012": [39.0450, -76.4950], "21029": [39.2070, -76.9450], "21032": [39.0280, -76.6020],
+    "21037": [38.9150, -76.5450], "21045": [39.2050, -76.8300], "21046": [39.1740, -76.8380],
+    "21060": [39.1700, -76.5900], "21061": [39.1620, -76.6250], "21075": [39.2080, -76.7500],
+    "21090": [39.2080, -76.6650], "21108": [39.0900, -76.6260], "21113": [39.0640, -76.6900],
+    "21146": [39.0750, -76.5620], "21163": [39.3300, -76.8600], "21771": [39.3760, -77.1550],
+    "21784": [39.3990, -76.9640], "21794": [39.2970, -76.9580], "21797": [39.3570, -77.0690]
   };
   // Loose regional fallback by ZIP3 prefix, used only when the exact ZIP isn't in the table above.
   var ZIP3_FALLBACK = {
@@ -770,7 +1030,7 @@
     o.id = i;
     o.coords = ZIP_COORDS[o.zip] || MD_CENTER;
     if (!o.address) o.address = o.city + ", MD " + o.zip;
-    o.ageLabel = o.minAge > 0 ? ("Ages " + o.minAge + "+") : "All ages welcome";
+    o.ageLabel = o.minAge == null ? "Check age requirement with organization" : o.minAge > 0 ? ("Ages " + o.minAge + "+") : "All ages welcome";
   });
 
   function shuffle(arr) {
@@ -797,6 +1057,19 @@
     try { localStorage.setItem(FAV_KEY, JSON.stringify(Array.from(set))); } catch (e) {}
   }
 
+  var HOURS_GOAL = 75;
+  var HOURS_KEY = "groundwork:hours";
+  function loadHours() {
+    try {
+      var raw = localStorage.getItem(HOURS_KEY);
+      var arr = raw ? JSON.parse(raw) : [];
+      return Array.isArray(arr) ? arr.filter(function (e) { return e && typeof e.hours === "number"; }) : [];
+    } catch (e) { return []; }
+  }
+  function saveHours(list) {
+    try { localStorage.setItem(HOURS_KEY, JSON.stringify(list)); } catch (e) {}
+  }
+
   // ---------------- state ----------------
   var state = {
     selectedCats: new Set(),
@@ -805,7 +1078,8 @@
     radius: 25,
     search: null, // { zip, coords, approx }
     favorites: loadFavorites(),
-    tab: "browse" // "browse" | "favorites"
+    hoursLog: loadHours(),
+    tab: "browse" // "browse" | "favorites" | "progress"
   };
 
   function toggleFavorite(id) {
@@ -846,6 +1120,7 @@
   var tabBrowse = document.getElementById("tabBrowse");
   var tabFavorites = document.getElementById("tabFavorites");
   var favCountBadge = document.getElementById("favCountBadge");
+  var tabProgress = document.getElementById("tabProgress");
 
   document.getElementById("searchBtn").addEventListener("click", doSearch);
   zipInput.addEventListener("keydown", function (e) { if (e.key === "Enter") doSearch(); });
@@ -868,12 +1143,120 @@
     state.tab = tab;
     tabBrowse.setAttribute("aria-selected", tab === "browse" ? "true" : "false");
     tabFavorites.setAttribute("aria-selected", tab === "favorites" ? "true" : "false");
+    tabProgress.setAttribute("aria-selected", tab === "progress" ? "true" : "false");
     browsePanel.hidden = tab !== "browse";
     favoritesPanel.hidden = tab !== "favorites";
+    progressPanel.hidden = tab !== "progress";
     render();
   }
   tabBrowse.addEventListener("click", function () { setTab("browse"); });
   tabFavorites.addEventListener("click", function () { setTab("favorites"); });
+  tabProgress.addEventListener("click", function () { setTab("progress"); });
+
+  // ---------------- hours tracker ----------------
+  var progressPanel = document.getElementById("progressPanel");
+  var hoursBadge = document.getElementById("hoursBadge");
+  var logForm = document.getElementById("logForm");
+  var logOrg = document.getElementById("logOrg");
+  var logDate = document.getElementById("logDate");
+  var logHours = document.getElementById("logHours");
+  var logError = document.getElementById("logError");
+  var logList = document.getElementById("logList");
+
+  function todayISO() {
+    var d = new Date();
+    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  }
+  logDate.value = todayISO();
+
+  // Dropdown of listed organizations, plus an "Other" choice for anything not on the site.
+  var OTHER_VALUE = "__other__";
+  var logOther = document.getElementById("logOther");
+  var logOtherWrap = document.getElementById("logOtherWrap");
+  Array.from(new Set(OPPS.map(function (o) { return o.org; }))).sort().forEach(function (name) {
+    var opt = document.createElement("option");
+    opt.value = name;
+    opt.textContent = name;
+    logOrg.appendChild(opt);
+  });
+  var otherOpt = document.createElement("option");
+  otherOpt.value = OTHER_VALUE;
+  otherOpt.textContent = "Other (not listed)";
+  logOrg.appendChild(otherOpt);
+  logOrg.addEventListener("change", function () {
+    logOtherWrap.hidden = logOrg.value !== OTHER_VALUE;
+    if (!logOtherWrap.hidden) logOther.focus();
+  });
+
+  logForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var org = logOrg.value === OTHER_VALUE ? logOther.value.trim() : logOrg.value;
+    var hrs = Number(logHours.value);
+    if (!org || !(hrs >= 0.25 && hrs <= 24)) {
+      logError.classList.add("show");
+      return;
+    }
+    logError.classList.remove("show");
+    state.hoursLog.push({ id: Date.now() + "-" + Math.random().toString(36).slice(2, 7), org: org, date: logDate.value || todayISO(), hours: Math.round(hrs * 100) / 100 });
+    saveHours(state.hoursLog);
+    logOrg.value = "";
+    logOther.value = "";
+    logOtherWrap.hidden = true;
+    logHours.value = "";
+    render();
+  });
+
+  function deleteHours(id) {
+    state.hoursLog = state.hoursLog.filter(function (e) { return e.id !== id; });
+    saveHours(state.hoursLog);
+    render();
+  }
+
+  function fmtHours(n) { return String(Math.round(n * 100) / 100); }
+
+  function renderProgress() {
+    var total = state.hoursLog.reduce(function (sum, e) { return sum + e.hours; }, 0);
+    var pct = Math.min(100, (total / HOURS_GOAL) * 100);
+    var remaining = Math.max(0, HOURS_GOAL - total);
+
+    hoursBadge.textContent = fmtHours(total) + " / " + HOURS_GOAL;
+    if (state.tab !== "progress") return;
+
+    document.getElementById("hoursTotal").innerHTML = fmtHours(total) + " <span>/ " + HOURS_GOAL + " hours</span>";
+    document.getElementById("hoursPct").textContent = Math.floor(pct) + "%";
+    var fill = document.getElementById("hoursFill");
+    fill.style.width = pct + "%";
+    fill.classList.toggle("done", remaining === 0);
+    var bar = document.getElementById("hoursBar");
+    bar.setAttribute("aria-valuenow", String(Math.min(total, HOURS_GOAL)));
+    document.getElementById("hoursMsg").innerHTML = remaining === 0
+      ? "<strong>You've met the 75-hour graduation requirement!</strong> Keep logging any extra hours you volunteer."
+      : "<strong>" + fmtHours(remaining) + " more " + (remaining === 1 ? "hour" : "hours") + "</strong> needed to meet the 75-hour graduation requirement.";
+
+    logList.innerHTML = "";
+    if (!state.hoursLog.length) {
+      var empty = document.createElement("li");
+      empty.className = "empty-state";
+      empty.innerHTML = "<strong>No hours logged yet</strong>Add your first volunteer shift above to start tracking.";
+      logList.appendChild(empty);
+      return;
+    }
+    state.hoursLog.slice().sort(function (a, b) { return a.date < b.date ? 1 : a.date > b.date ? -1 : 0; }).forEach(function (entry) {
+      var li = document.createElement("li");
+      li.className = "log-item";
+      var org = document.createElement("span"); org.className = "log-org"; org.textContent = entry.org;
+      var date = document.createElement("span"); date.className = "log-date";
+      var parts = (entry.date || "").split("-");
+      date.textContent = parts.length === 3 ? new Date(+parts[0], +parts[1] - 1, +parts[2]).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" }) : "";
+      var hrs = document.createElement("span"); hrs.className = "log-hrs"; hrs.textContent = fmtHours(entry.hours) + (entry.hours === 1 ? " hr" : " hrs");
+      var del = document.createElement("button");
+      del.className = "log-del"; del.type = "button"; del.setAttribute("aria-label", "Delete entry for " + entry.org);
+      del.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>';
+      del.addEventListener("click", function () { deleteHours(entry.id); });
+      li.appendChild(org); li.appendChild(date); li.appendChild(hrs); li.appendChild(del);
+      logList.appendChild(li);
+    });
+  }
 
   function doSearch() {
     var zip = zipInput.value.trim();
@@ -1000,6 +1383,7 @@
 
   function render() {
     favCountBadge.textContent = String(state.favorites.size);
+    renderProgress();
 
     // ---- Browse tab ----
     var noFilters = !state.selectedCats.size && !state.keyword && state.minAge === "" && !state.search;
