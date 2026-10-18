@@ -204,6 +204,19 @@
     }
   }
   .select-wrap { position: relative; display: flex; align-items: center; }
+  .age-input {
+    width: 9.5rem;
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    border-radius: 10px;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 0.92rem;
+    font-weight: 600;
+    padding: 0.7rem 0.9rem 0.7rem 2.6rem;
+    color: var(--ink);
+    outline: none;
+  }
+  .age-input::placeholder { color: var(--ink-mute); font-weight: 500; }
   .select-wrap svg.leading { position: absolute; left: 0.85rem; width: 16px; height: 16px; color: var(--ink-mute); pointer-events: none; }
 
   .btn-search {
@@ -424,6 +437,8 @@
     margin-top: 0.9rem;
     display: flex; gap: 0.6rem; flex-wrap: wrap;
   }
+  .ask-block { margin-top: 1.4rem; }
+  .ask-block .second-row { margin-top: 0; }
   .keyword-field { position: relative; flex: 1 1 260px; display: flex; align-items: center; }
   .keyword-field svg.leading { position: absolute; left: 0.9rem; width: 16px; height: 16px; color: var(--ink-mute); }
   .keyword-field input {
@@ -438,6 +453,32 @@
     outline: none;
   }
   .keyword-field input::placeholder { color: var(--ink-mute); }
+  .keyword-field input:has(+ .ai-btn:not([hidden])) { padding-right: 7rem; }
+  .ai-btn {
+    position: absolute; right: 0.35rem;
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    background: var(--btn-ink); color: var(--btn-ink-text);
+    border: none; border-radius: 8px;
+    padding: 0.45rem 0.75rem;
+    font-family: "Plus Jakarta Sans", sans-serif; font-weight: 700; font-size: 0.82rem;
+    cursor: pointer;
+  }
+  .ai-btn[hidden] { display: none; }
+  .ai-btn svg { width: 14px; height: 14px; }
+  .ai-btn:hover { opacity: 0.88; }
+  .ai-btn:disabled { opacity: 0.55; cursor: progress; }
+  .ai-btn:focus-visible { outline: 2.5px solid var(--focus); outline-offset: 2px; }
+
+  .understood { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; margin-top: 0.75rem; font-size: 0.8rem; color: var(--ink-mute); }
+  .understood[hidden] { display: none; }
+  .understood .chip {
+    background: var(--gold-soft); color: var(--gold-ink);
+    border: 1px solid var(--gold-soft-border);
+    border-radius: 999px; padding: 0.2rem 0.6rem; font-weight: 600;
+  }
+  .ai-status { margin: 0.6rem 0 0; font-size: 0.85rem; color: var(--ink-soft); }
+  .ai-status[hidden] { display: none; }
+  .ai-status button { margin-left: 0.4rem; }
 
   /* ---------- Status line ---------- */
   .status-line {
@@ -654,31 +695,31 @@
     <p class="zip-error" id="zipError">Enter a valid 5-digit ZIP code, e.g. 21044.</p>
   </div>
 
+  <div class="ask-block">
+    <div class="second-row">
+      <div class="keyword-field">
+        <svg class="leading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input id="keywordInput" type="text" placeholder='Describe what you want — e.g. "dogs on weekends, I&#39;m 15, near Columbia"' aria-label="Search opportunities in plain English">
+        <button class="ai-btn" id="aiBtn" type="button" hidden>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8L12 3Z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15Z"/></svg>
+          Ask AI
+        </button>
+      </div>
+      <div class="select-wrap">
+        <svg class="leading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-3a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v3"/><circle cx="12" cy="7" r="4"/></svg>
+        <input id="ageInput" class="age-input" type="number" inputmode="numeric" min="1" max="120" step="1" placeholder="Your age" aria-label="Your age — shows only opportunities you're old enough for">
+      </div>
+    </div>
+    <div class="understood" id="searchUnderstood" hidden></div>
+    <p class="ai-status" id="aiStatus" hidden></p>
+  </div>
+
   <div class="filters">
     <div class="filters-label">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
       Filter by type
     </div>
     <div class="pill-row" id="pillRow"></div>
-
-    <div class="second-row">
-      <div class="keyword-field">
-        <svg class="leading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-        <input id="keywordInput" type="text" placeholder='Search by keyword — e.g. "animals", "weekend", "reading"...' aria-label="Search by keyword">
-      </div>
-      <div class="select-wrap">
-        <svg class="leading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-3a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v3"/><circle cx="12" cy="7" r="4"/></svg>
-        <select id="ageSelect" class="age-select" aria-label="Minimum age suitability">
-          <option value="">Any age</option>
-          <option value="0">All ages welcome</option>
-          <option value="12">12 and up</option>
-          <option value="14">14 and up</option>
-          <option value="16">16 and up</option>
-          <option value="18">18 and up</option>
-          <option value="21">21 and up</option>
-        </select>
-      </div>
-    </div>
   </div>
 
   <p class="status-line" id="statusLine"></p>
@@ -1079,6 +1120,7 @@
     search: null, // { zip, coords, approx }
     favorites: loadFavorites(),
     hoursLog: loadHours(),
+    ai: null, // { query, order: [ids], reasons: {id: why} } from the last "Ask AI" for this exact query
     tab: "browse" // "browse" | "favorites" | "progress"
   };
 
@@ -1108,7 +1150,7 @@
   var zipError = document.getElementById("zipError");
   var radiusSelect = document.getElementById("radiusSelect");
   var keywordInput = document.getElementById("keywordInput");
-  var ageSelect = document.getElementById("ageSelect");
+  var ageInput = document.getElementById("ageInput");
   var statusLine = document.getElementById("statusLine");
   var grid = document.getElementById("grid");
   var favStatusLine = document.getElementById("favStatusLine");
@@ -1132,11 +1174,106 @@
     if (state.search) render();
   });
   keywordInput.addEventListener("input", function () {
-    state.keyword = keywordInput.value.trim().toLowerCase();
+    state.keyword = keywordInput.value.trim();
+    if (aiCtl) { aiCtl.abort(); aiCtl = null; aiBtn.disabled = false; setAiStatus(""); }
     render();
   });
-  ageSelect.addEventListener("change", function () {
-    state.minAge = ageSelect.value;
+  keywordInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter" && sampleFn && state.keyword) askAI();
+  });
+
+  // ---------------- AI search (only when opened as a claude.ai artifact) ----------------
+  var aiBtn = document.getElementById("aiBtn");
+  var aiStatus = document.getElementById("aiStatus");
+  var searchUnderstood = document.getElementById("searchUnderstood");
+  var sampleFn = null;
+  var aiCtl = null;
+
+  if (window.claude && typeof window.claude.use === "function") {
+    window.claude.use("sample").then(function (s) {
+      if (!s) return;
+      sampleFn = s;
+      aiBtn.hidden = false;
+    }, function () {});
+  }
+  aiBtn.addEventListener("click", function () { if (state.keyword) askAI(); else keywordInput.focus(); });
+
+  function setAiStatus(msg, withCancel) {
+    aiStatus.textContent = msg || "";
+    aiStatus.hidden = !msg;
+    if (withCancel) {
+      var stop = document.createElement("button");
+      stop.type = "button";
+      stop.className = "clear-link";
+      stop.textContent = "Cancel";
+      stop.addEventListener("click", function () { if (aiCtl) aiCtl.abort(); });
+      aiStatus.appendChild(stop);
+    }
+  }
+
+  function disableAi(msg) {
+    sampleFn = null;
+    aiBtn.hidden = true;
+    setAiStatus(msg);
+  }
+
+  function askAI() {
+    var query = state.keyword;
+    if (aiCtl) aiCtl.abort();
+    var ctl = new AbortController();
+    aiCtl = ctl;
+    aiBtn.disabled = true;
+    setAiStatus("Asking Claude to find your best matches…", true);
+
+    var age = state.minAge !== "" ? Number(state.minAge) : null;
+    var catalog = OPPS.map(function (o) {
+      return [o.id, o.title, o.org, CAT_BY_KEY[o.cat].label, o.city + " " + o.zip, o.hours,
+        o.minAge == null ? "min age not listed" : (o.minAge > 0 ? "min age " + o.minAge : "all ages"),
+        o.desc.slice(0, 160)].join(" | ");
+    }).join("\n");
+    var prompt =
+      "You help a student find volunteer opportunities in Maryland. Match their request against the listings below.\n\n" +
+      "Request: " + JSON.stringify(query) + "\n" +
+      (age != null ? "The student entered their age as " + age + ".\n" : "") +
+      "\nListings (id | title | organization | type | city ZIP | schedule | minimum age | summary):\n" + catalog + "\n\n" +
+      "Choose the listings that genuinely fit the request — interests, availability and schedule, location, age and skills. " +
+      "Never include a listing whose minimum age is above the student's age. Order best match first, at most 20. " +
+      'Reply with only JSON in this shape: {"matches":[{"id":12,"why":"Saturday mornings walking shelter dogs"}]}. ' +
+      '"why" is at most 12 words, speaks to the student, and uses only facts from the listing. If nothing fits, reply {"matches":[]}.';
+
+    sampleFn.json(prompt, { modelTier: "quick", signal: ctl.signal }).then(function (res) {
+      if (aiCtl !== ctl) return;
+      var order = [], reasons = {}, seen = {};
+      var list = res && Array.isArray(res.matches) ? res.matches : [];
+      list.forEach(function (m) {
+        var id = Number(m && m.id);
+        if (!Number.isInteger(id) || !OPPS[id] || seen[id]) return;
+        seen[id] = true;
+        order.push(id);
+        if (m.why) reasons[id] = String(m.why).slice(0, 140);
+      });
+      state.ai = { query: query, order: order, reasons: reasons };
+      setAiStatus(order.length ? "" : "Claude didn't find a strong match — try describing it differently.");
+      render();
+    }, function (e) {
+      if (aiCtl !== ctl) return;
+      var code = e && e.code;
+      if (code === "cancelled") setAiStatus("");
+      else if (["not_granted", "sampling_disabled", "not_declared", "capability_disabled", "capability_removed"].indexOf(code) > -1)
+        disableAi("AI search isn't available here — showing smart matches instead.");
+      else if (code === "rate_limited") setAiStatus("Too many AI searches right now — try again in a little while.");
+      else if (code === "session_expired") setAiStatus("Please sign in to Claude again to use AI search.");
+      else setAiStatus("AI search ran into a problem — showing smart matches. You can try again.");
+    }).then(function () {
+      if (aiCtl === ctl) aiCtl = null;
+      aiBtn.disabled = false;
+    });
+  }
+  // Filters as you type: a valid whole-number age keeps only opportunities whose
+  // minimum age is at or below it; an empty or invalid entry turns the filter off.
+  ageInput.addEventListener("input", function () {
+    var age = Number(ageInput.value);
+    state.minAge = ageInput.value !== "" && Number.isInteger(age) && age >= 1 && age <= 120 ? String(age) : "";
     render();
   });
   function setTab(tab) {
@@ -1309,7 +1446,7 @@
         '<span class="cat-chip">' + cat.label + '</span>' +
         '<h3 class="card-title">' + o.title + '</h3>' +
         '<div class="org-row">' + icon("building") + '<span>' + o.org + '</span></div>' +
-        (reason ? '<p class="rec-reason">' + reason + '</p>' : "") +
+        (reason ? '<p class="rec-reason">' + escapeHtml(reason) + '</p>' : "") +
         '<p class="card-desc">' + o.desc + '</p>' +
         '<div class="meta-rows">' +
           '<div class="meta-row">' + icon("pin") + '<span>' + o.address + '</span></div>' +
@@ -1381,6 +1518,192 @@
     return { items: top, reasons: reasons };
   }
 
+  // ---------------- smart (plain-English) search ----------------
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  function stem(w) {
+    if (w.length > 4 && /ies$/.test(w)) return w.slice(0, -3) + "y";
+    if (w.length > 3 && /s$/.test(w) && !/ss$/.test(w)) return w.slice(0, -1);
+    return w;
+  }
+
+  var CAT_WORDS = {
+    animals: "animal dog cat pet puppy kitten horse equine wildlife critter",
+    environment: "environment environmental nature outdoor outdoors outside tree plant planting garden gardening river stream creek water bay park trail hike hiking cleanup conservation climate green oyster kayak invasive bird wildflower",
+    seniors: "senior elderly older aging elder grandparent retiree",
+    food: "food hunger hungry pantry meal cook cooking kitchen grocery groceries lunch dinner feed feeding sandwich",
+    education: "tutor tutoring teach teaching kid child children youth school reading literacy mentor mentoring homework library esl english education learning",
+    health: "health hospital medical medicine doctor nurse nursing patient healthcare hospice mental crisis hotline therapy disability autism premed",
+    community: "homeless homelessness housing build building construction repair handyman community event festival fair shelter neighborhood civic moving",
+    arts: "art museum history historic historical music theater theatre opera culture docent tour gallery painting",
+    disaster: "fire firefighter firefighting emt ems emergency disaster rescue paramedic",
+    other: "thrift restore retail store sorting donation"
+  };
+  var WORD_TO_CAT = {};
+  Object.keys(CAT_WORDS).forEach(function (cat) {
+    CAT_WORDS[cat].split(" ").forEach(function (w) { WORD_TO_CAT[stem(w)] = cat; });
+  });
+
+  var STOP = {};
+  ("i im i'm am a an the to and or for with in on at of my me we our want wanna would like love looking look find " +
+   "something anything some can could do doing help helping volunteer volunteering opportunity opportunitie near around by " +
+   "free available availability only be is are have has that this where who work working time year old yo age aged maybe " +
+   "really also any get go place thing stuff kind mostly prefer preferably during after before from out about just so but " +
+   "if it its what how when day week hour on interested into enjoy good great fun new people person able possible " +
+   "please need needed ideally every each per close nearby local area teen student college once month " +
+   "weekly monthly regular regularly usually sometime sometimes free").split(" ").forEach(function (w) { STOP[stem(w)] = true; });
+
+  var DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
+  var DAY_NAMES = { mon: "Mondays", tue: "Tuesdays", wed: "Wednesdays", thu: "Thursdays", fri: "Fridays", sat: "Saturdays", sun: "Sundays" };
+  var DAY_ALIASES = {
+    monday: "mon", mon: "mon", tuesday: "tue", tue: "tue", tues: "tue", wednesday: "wed", wed: "wed",
+    thursday: "thu", thu: "thu", thur: "thu", thurs: "thu", friday: "fri", fri: "fri",
+    saturday: "sat", sat: "sat", sunday: "sun", sun: "sun"
+  };
+  var CITY_NAMES = Array.from(new Set(OPPS.map(function (o) { return o.city.toLowerCase(); })))
+    .sort(function (a, b) { return b.length - a.length; });
+  var CITY_CENTERS = {};
+  function cityCenter(c) {
+    if (!CITY_CENTERS[c]) {
+      var pts = OPPS.filter(function (o) { return o.city.toLowerCase() === c; }).map(function (o) { return o.coords; });
+      CITY_CENTERS[c] = [
+        pts.reduce(function (s, x) { return s + x[0]; }, 0) / pts.length,
+        pts.reduce(function (s, x) { return s + x[1]; }, 0) / pts.length
+      ];
+    }
+    return CITY_CENTERS[c];
+  }
+
+  // What an opportunity's schedule text says: which days and times, and whether it's flexible.
+  function scheduleOf(o) {
+    if (o._sched) return o._sched;
+    var h = o.hours.toLowerCase();
+    var days = new Set(), times = new Set();
+    var range = /\b(mon|tue|wed|thu|fri|sat|sun)[a-z]*\.?\s*(?:–|-|to|through)\s*(mon|tue|wed|thu|fri|sat|sun)/g, m;
+    while ((m = range.exec(h))) {
+      for (var i = DAYS.indexOf(m[1]); ; i = (i + 1) % 7) { days.add(DAYS[i]); if (DAYS[i] === m[2]) break; }
+    }
+    var single = /\b(mon|tue|wed|thu|fri|sat|sun)[a-z]*/g;
+    while ((m = single.exec(h))) days.add(m[1]);
+    if (/weekday/.test(h)) ["mon", "tue", "wed", "thu", "fri"].forEach(function (d) { days.add(d); });
+    if (/weekend/.test(h)) { days.add("sat"); days.add("sun"); }
+    if (/seven days|daily|every day|any day|all week/.test(h)) DAYS.forEach(function (d) { days.add(d); });
+    if (/morning|\b([6-9]|1[01])(:\d\d)?\s*am\b/.test(h)) times.add("morning");
+    if (/afternoon|after school|\b(12|1|2|3|4)(:\d\d)?\s*pm\b/.test(h)) times.add("afternoon");
+    if (/evening|night|\b([5-9]|1[01])(:\d\d)?\s*pm\b/.test(h)) times.add("evening");
+    var flexible = /flexib|varies|vary|as much|choose|by arrangement|on-call|see website|call |email |contact|apply|sign up|throughout|year-round|event|scheduled/.test(h);
+    o._sched = { days: days, times: times, flexible: flexible, summer: /summer/.test(h + " " + o.desc.toLowerCase()) };
+    return o._sched;
+  }
+
+  function parseQuery(raw) {
+    var q = " " + raw.toLowerCase().replace(/[’‘]/g, "'") + " ";
+    var p = { age: null, cats: new Set(), days: new Set(), times: new Set(), cities: [], summer: false, terms: [] };
+
+    var ageMatch = q.match(/\b(?:i'?m|i am|im|age|aged)\s*(\d{1,2})\b/) || q.match(/\b(\d{1,2})\s*(?:years?|yrs?|y\/?o)\b/);
+    if (ageMatch) { p.age = Number(ageMatch[1]); q = q.replace(ageMatch[0], " "); }
+
+    CITY_NAMES.forEach(function (c) {
+      if (q.indexOf(" " + c + " ") > -1 || q.indexOf(" " + c + ",") > -1 || q.indexOf(" " + c + ".") > -1) {
+        p.cities.push(c); q = q.split(c).join(" ");
+      }
+    });
+
+    // Phrases first, so "high school" doesn't read as an education request and "after school" reads as a time.
+    q = q.replace(/\b(high|middle|in|elementary)\s+school\b/g, " ");
+    if (/\bafter[\s-]?school\b/.test(q)) { p.times.add("afternoon"); q = q.replace(/\bafter[\s-]?school\b/g, " "); }
+    if (/\bfirst aid\b/.test(q)) { p.cats.add("disaster"); q = q.replace(/\bfirst aid\b/g, " "); }
+    if (/\bpre-?med\b/.test(q)) { p.cats.add("health"); q = q.replace(/\bpre-?med\b/g, " "); }
+
+    q.split(/[^a-z0-9'+-]+/).forEach(function (tok) {
+      if (!tok) return;
+      var w = stem(tok.replace(/'s$/, ""));
+      if (DAY_ALIASES[w]) { p.days.add(DAY_ALIASES[w]); return; }
+      if (w === "weekend") { p.days.add("sat"); p.days.add("sun"); return; }
+      if (w === "weekday") { ["mon", "tue", "wed", "thu", "fri"].forEach(function (d) { p.days.add(d); }); return; }
+      if (w === "morning") { p.times.add("morning"); return; }
+      if (w === "afternoon") { p.times.add("afternoon"); return; }
+      if (w === "evening" || w === "night" || w === "tonight") { p.times.add("evening"); return; }
+      if (w === "summer") { p.summer = true; return; }
+      var clock = w.match(/^(\d{1,2})(am|pm)$/);
+      if (clock) {
+        var hr = Number(clock[1]) % 12 + (clock[2] === "pm" ? 12 : 0);
+        p.times.add(hr < 12 ? "morning" : hr < 17 ? "afternoon" : "evening");
+        return;
+      }
+      if (WORD_TO_CAT[w]) { p.cats.add(WORD_TO_CAT[w]); p.terms.push(w); return; }
+      if (STOP[w] || w.length < 3 || /^\d+$/.test(w)) return;
+      p.terms.push(w);
+    });
+    return p;
+  }
+
+  // 0 = doesn't fit; higher = better fit. Categories, days, times and places are requirements
+  // (flexible schedules still count, ranked lower); other words only boost the ranking.
+  function scoreSmart(o, p, nearMiles) {
+    var score = 1;
+    if (p.cats.size) { if (!p.cats.has(o.cat)) return 0; score += 3; }
+    if (p.cities.length) {
+      // "near Columbia" = in Columbia, or within about 12 miles of it.
+      if (p.cities.indexOf(o.city.toLowerCase()) > -1) score += 3;
+      else {
+        var nearest = Math.min.apply(null, p.cities.map(function (c) { return haversineMiles(cityCenter(c), o.coords); }));
+        if (nearest > (nearMiles || 12)) return 0;
+        score += Math.max(1, 3 - nearest / 6);
+      }
+    }
+    var s = scheduleOf(o);
+    if (p.days.size) {
+      var dayHit = Array.from(p.days).some(function (d) { return s.days.has(d); });
+      if (dayHit) score += 3; else if (s.flexible || !s.days.size) score += 0.5; else return 0;
+    }
+    if (p.times.size) {
+      var timeHit = Array.from(p.times).some(function (t) { return s.times.has(t); });
+      if (timeHit) score += 2; else if (s.flexible || !s.times.size) score += 0.5; else return 0;
+    }
+    if (p.summer) { if (s.summer) score += 2; }
+    if (p.terms.length) {
+      var hay = (o.title + " " + o.org + " " + o.desc + " " + o.city + " " + CAT_BY_KEY[o.cat].label + " " + o.hours).toLowerCase();
+      var hits = 0;
+      p.terms.forEach(function (t) { if (hay.indexOf(t) > -1) hits++; });
+      var constrained = p.cats.size || p.cities.length || p.days.size || p.times.size || p.summer;
+      if (!hits && !constrained) return 0;
+      score += hits;
+    }
+    return score;
+  }
+
+  function renderUnderstood(p, aiActive) {
+    searchUnderstood.innerHTML = "";
+    if (!p) { searchUnderstood.hidden = true; return; }
+    var chips = [];
+    if (aiActive) chips.push("✦ Ranked by AI");
+    p.cats.forEach(function (c) { chips.push(CAT_BY_KEY[c].label); });
+    var d = Array.from(p.days);
+    if (d.length === 2 && p.days.has("sat") && p.days.has("sun")) chips.push("Weekends");
+    else if (d.length === 5 && !p.days.has("sat") && !p.days.has("sun")) chips.push("Weekdays");
+    else d.forEach(function (x) { chips.push(DAY_NAMES[x]); });
+    p.times.forEach(function (t) { chips.push(t.charAt(0).toUpperCase() + t.slice(1) + "s"); });
+    if (p.summer) chips.push("Summer");
+    p.cities.forEach(function (c) { chips.push("Near " + c.replace(/\b\w/g, function (x) { return x.toUpperCase(); })); });
+    if (p.age != null) chips.push("Age " + p.age);
+    if (!chips.length) { searchUnderstood.hidden = true; return; }
+    var label = document.createElement("span");
+    label.textContent = "Searching for:";
+    searchUnderstood.appendChild(label);
+    chips.forEach(function (t) {
+      var chip = document.createElement("span");
+      chip.className = "chip";
+      chip.textContent = t;
+      searchUnderstood.appendChild(chip);
+    });
+    searchUnderstood.hidden = false;
+  }
+
   function render() {
     favCountBadge.textContent = String(state.favorites.size);
     renderProgress();
@@ -1389,26 +1712,50 @@
     var noFilters = !state.selectedCats.size && !state.keyword && state.minAge === "" && !state.search;
     var items = noFilters ? RANDOM_ORDER.map(function (id) { return OPPS[id]; }) : OPPS.slice();
     if (state.selectedCats.size) items = items.filter(function (o) { return state.selectedCats.has(o.cat); });
-    if (state.keyword) {
-      var k = state.keyword;
-      items = items.filter(function (o) {
-        return o.title.toLowerCase().indexOf(k) > -1 ||
-               o.org.toLowerCase().indexOf(k) > -1 ||
-               o.desc.toLowerCase().indexOf(k) > -1 ||
-               o.city.toLowerCase().indexOf(k) > -1 ||
-               CAT_BY_KEY[o.cat].label.toLowerCase().indexOf(k) > -1;
-      });
+
+    // Plain-English search: AI ranking when the student asked Claude about this exact text,
+    // otherwise the built-in smart matcher. Either way `rank` orders the results.
+    var parsed = state.keyword ? parseQuery(state.keyword) : null;
+    var aiActive = !!(parsed && state.ai && state.ai.query === state.keyword);
+    // Age: the age box, or an age mentioned in the search ("I'm 15") — the stricter of the two.
+    var effectiveAge = state.minAge !== "" ? Number(state.minAge) : null;
+    if (parsed && parsed.age != null) effectiveAge = effectiveAge == null ? parsed.age : Math.min(effectiveAge, parsed.age);
+    if (effectiveAge != null) {
+      items = items.filter(function (o) { return o.minAge <= effectiveAge; });
     }
-    if (state.minAge !== "") {
-      var maxAllowed = Number(state.minAge);
-      items = items.filter(function (o) { return o.minAge <= maxAllowed; });
+
+    var rank = null, widenedNote = "";
+    if (aiActive) {
+      rank = {};
+      state.ai.order.forEach(function (id, i) { rank[id] = 1000 - i; });
+      items = items.filter(function (o) { return rank[o.id] != null; });
+    } else if (parsed) {
+      var pool = items;
+      var runSmart = function (nearMiles) {
+        rank = {};
+        return pool.filter(function (o) {
+          var s = scoreSmart(o, parsed, nearMiles);
+          if (s > 0) rank[o.id] = s;
+          return s > 0;
+        });
+      };
+      items = runSmart(12);
+      if (!items.length && parsed.cities.length) {
+        items = runSmart(30);
+        if (items.length) widenedNote = "Nothing matched right in that area, so these are a little farther out (up to about 30 miles).";
+      }
+    }
+    renderUnderstood(parsed, aiActive);
+
+    if (rank) {
+      items.sort(function (a, b) { return rank[b.id] - rank[a.id]; });
     }
 
     var approxNote = "";
     if (state.search) {
       items = withDistances(items);
       items = items.filter(function (o) { return o._dist <= state.radius; });
-      items.sort(function (a, b) { return a._dist - b._dist; });
+      items.sort(function (a, b) { return rank ? (rank[b.id] - rank[a.id]) || (a._dist - b._dist) : a._dist - b._dist; });
       if (state.search.approx) {
         approxNote = "We don't have an exact location for " + state.search.zip + " yet — showing approximate distances from the nearest known area.";
       }
@@ -1416,18 +1763,22 @@
 
     if (state.search) {
       statusLine.innerHTML = "<strong>" + items.length + "</strong> " + (items.length === 1 ? "opportunity" : "opportunities") +
-        " near " + state.search.zip + ", closest first" +
+        " near " + state.search.zip + (rank ? ", best matches first" : ", closest first") +
         ' <button class="clear-link" id="clearBtn" type="button">Clear ZIP</button>' +
         (approxNote ? '<div class="approx-note">' + approxNote + '</div>' : "");
       var cb = document.getElementById("clearBtn");
       if (cb) cb.addEventListener("click", clearSearch);
+    } else if (rank) {
+      statusLine.innerHTML = "<strong>" + items.length + "</strong> " + (items.length === 1 ? "opportunity matches" : "opportunities match") + " your search, best matches first";
     } else {
       statusLine.innerHTML = "<strong>" + items.length + "</strong> " + (items.length === 1 ? "opportunity" : "opportunities") + " listed across Maryland — enter a ZIP code to sort by distance";
     }
 
-    renderItemsInto(grid, items, null,
+    if (widenedNote) statusLine.innerHTML += '<div class="approx-note">' + widenedNote + '</div>';
+
+    renderItemsInto(grid, items, aiActive ? state.ai.reasons : null,
       "No opportunities match yet",
-      "Try clearing a filter, widening your search radius, or searching a different keyword.");
+      "Try describing it differently, clearing a filter, or widening your search radius.");
 
     // ---- Favorites tab ----
     if (state.tab === "favorites") {
