@@ -437,6 +437,41 @@
     margin-top: 0.9rem;
     display: flex; gap: 0.6rem; flex-wrap: wrap;
   }
+  /* ---------- Feedback / rating ---------- */
+  .feedback-card {
+    margin-top: 3.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem 1.6rem;
+    box-shadow: 0 6px 18px var(--card-shadow);
+    max-width: 40rem;
+  }
+  .feedback-title { font-weight: 700; font-size: 1.2rem; margin: 0; }
+  .feedback-sub { margin: 0.3rem 0 0.9rem; font-size: 0.9rem; color: var(--ink-mute); }
+  .stars { display: flex; gap: 0.3rem; }
+  .star-btn {
+    background: none; border: none; padding: 0.15rem; cursor: pointer;
+    color: var(--border); line-height: 0; border-radius: 6px;
+  }
+  .star-btn svg { width: 34px; height: 34px; }
+  .star-btn.on { color: #f5b301; }
+  .star-btn:hover { transform: scale(1.08); }
+  .star-btn:focus-visible { outline: 2.5px solid var(--focus); outline-offset: 2px; }
+  .feedback-more { margin-top: 1rem; display: flex; flex-direction: column; gap: 0.55rem; align-items: flex-start; }
+  .feedback-more[hidden] { display: none; }
+  .feedback-label { font-size: 0.88rem; font-weight: 600; color: var(--ink-soft); }
+  .feedback-label span { font-weight: 500; color: var(--ink-mute); }
+  .feedback-more textarea {
+    width: 100%;
+    border: 1.5px solid var(--border); background: var(--surface); color: var(--ink);
+    border-radius: 10px; padding: 0.7rem 0.85rem;
+    font-family: "Plus Jakarta Sans", sans-serif; font-size: 0.92rem; resize: vertical; outline: none;
+  }
+  .feedback-more textarea:focus-visible { outline: 2.5px solid var(--focus); outline-offset: 2px; }
+  .feedback-error { margin: 0; font-size: 0.82rem; color: #b5482f; }
+  .feedback-thanks { margin: 0; font-weight: 700; font-size: 1.05rem; }
+
   .ask-block { margin-top: 1.4rem; }
   .ask-block .second-row { margin-top: 0; }
   .keyword-field { position: relative; flex: 1 1 260px; display: flex; align-items: center; }
@@ -775,6 +810,21 @@
     <h2 class="log-heading">Logged hours</h2>
     <ul class="log-list" id="logList"></ul>
   </div>
+
+  <section class="feedback-card" id="feedbackCard" aria-labelledby="feedbackTitle">
+    <div id="feedbackForm">
+      <h2 class="feedback-title" id="feedbackTitle">How useful is Groundwork?</h2>
+      <p class="feedback-sub">Rate the site — it's anonymous and helps us improve.</p>
+      <div class="stars" role="radiogroup" aria-label="Rating from 1 to 5 stars" id="starRow"></div>
+      <div class="feedback-more" id="feedbackMore" hidden>
+        <label class="feedback-label" for="feedbackComment">Anything we should add or fix? <span>(optional)</span></label>
+        <textarea id="feedbackComment" rows="3" maxlength="1000" placeholder="e.g. more weekend opportunities near Glen Burnie"></textarea>
+        <button class="btn-search" id="feedbackSubmit" type="button">Send rating</button>
+        <p class="feedback-error" id="feedbackError" hidden>Couldn't send that — check your connection and try again.</p>
+      </div>
+    </div>
+    <p class="feedback-thanks" id="feedbackThanks" hidden>Thanks for rating Groundwork! 💛</p>
+  </section>
 
 </div>
 
@@ -1809,6 +1859,70 @@
 })();
 </script>
 
+<script>
+// Anonymous site rating. Submits to the "Groundwork Feedback" Google Form, whose responses
+// land in the owner's Google Sheet. Google doesn't let pages read the reply (no-cors), so a
+// request that leaves the browser counts as sent. One rating per browser.
+(function () {
+  "use strict";
+  var FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfGyYA47IX4t9gpkvOqb9fYtKtRFKEwPeMxbST9Vu1V5LTunQ/formResponse";
+  var RATING_FIELD = "entry.182720936";
+  var COMMENT_FIELD = "entry.1258929274";
+  var RATED_KEY = "groundwork:rated";
+
+  var formEl = document.getElementById("feedbackForm");
+  var thanks = document.getElementById("feedbackThanks");
+  var starRow = document.getElementById("starRow");
+  var more = document.getElementById("feedbackMore");
+  var comment = document.getElementById("feedbackComment");
+  var submit = document.getElementById("feedbackSubmit");
+  var error = document.getElementById("feedbackError");
+  var rating = 0;
+
+  function alreadyRated() { try { return localStorage.getItem(RATED_KEY) === "1"; } catch (e) { return false; } }
+  function showThanks() { formEl.hidden = true; thanks.hidden = false; }
+  if (alreadyRated()) { showThanks(); return; }
+
+  var STAR = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4L2.8 9.5l6.4-.8L12 2.8Z"/></svg>';
+  var buttons = [1, 2, 3, 4, 5].map(function (n) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "star-btn";
+    b.setAttribute("role", "radio");
+    b.setAttribute("aria-checked", "false");
+    b.setAttribute("aria-label", n + (n === 1 ? " star" : " stars"));
+    b.innerHTML = STAR;
+    b.addEventListener("click", function () { setRating(n); });
+    b.addEventListener("mouseenter", function () { paint(n); });
+    b.addEventListener("mouseleave", function () { paint(rating); });
+    starRow.appendChild(b);
+    return b;
+  });
+  function paint(n) { buttons.forEach(function (b, i) { b.classList.toggle("on", i < n); }); }
+  function setRating(n) {
+    rating = n;
+    paint(n);
+    buttons.forEach(function (b, i) { b.setAttribute("aria-checked", i === n - 1 ? "true" : "false"); });
+    more.hidden = false;
+  }
+
+  submit.addEventListener("click", function () {
+    if (!rating) return;
+    submit.disabled = true;
+    error.hidden = true;
+    var body = new URLSearchParams();
+    body.append(RATING_FIELD, String(rating));
+    if (comment.value.trim()) body.append(COMMENT_FIELD, comment.value.trim().slice(0, 1000));
+    fetch(FORM_URL, { method: "POST", mode: "no-cors", body: body }).then(function () {
+      try { localStorage.setItem(RATED_KEY, "1"); } catch (e) {}
+      showThanks();
+    }, function () {
+      error.hidden = false;
+      submit.disabled = false;
+    });
+  });
+})();
+</script>
 <!-- Private visitor analytics (GoatCounter): no cookies, nothing shown on the page. -->
 <script data-goatcounter="https://groundwork1234.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </body></html> 
