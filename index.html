@@ -811,7 +811,7 @@
         <div class="grow combo-field">
           <label for="logOrgInput">Opportunity</label>
           <div class="combo">
-            <input id="logOrgInput" type="text" role="combobox" autocomplete="off" aria-autocomplete="list" aria-expanded="false" aria-controls="logOrgList" placeholder="Type or pick what you did">
+            <input id="logOrgInput" type="text" role="combobox" autocomplete="off" aria-autocomplete="list" aria-expanded="false" aria-controls="logOrgList" placeholder="Choose or type what you did">
             <button type="button" class="combo-toggle" id="logOrgToggle" aria-label="Show all opportunities" tabindex="-1">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
             </button>
@@ -1472,14 +1472,17 @@
     }
     items.forEach(function (item, i) {
       var li = document.createElement("li");
-      li.className = "combo-option" + (item.custom != null ? " custom" : "");
+      li.className = "combo-option" + (item.custom != null || item.other ? " custom" : "");
       li.id = "logOrgOpt" + i;
       li.setAttribute("role", "option");
       var t = document.createElement("span");
       t.className = "opt-title";
       var m = document.createElement("span");
       m.className = "opt-meta";
-      if (item.custom != null) {
+      if (item.other) {
+        t.textContent = "Other (not listed)";
+        m.textContent = "Type its name in the box above";
+      } else if (item.custom != null) {
         t.textContent = "Log “" + item.custom + "” as written";
         m.textContent = "Not on Groundwork? That's fine — it still counts.";
       } else {
@@ -1500,6 +1503,14 @@
   function choose(i) {
     var item = comboItems[i];
     if (!item) return;
+    if (item.other) {
+      pickedOpp = null; pickedCustom = false;
+      logOrgInput.value = "";
+      setHint("Type the name of what you did, then log your hours.");
+      closeCombo();
+      logOrgInput.focus();
+      return;
+    }
     if (item.custom != null) {
       pickedOpp = null; pickedCustom = true;
       setHint("Will be logged as written.");
@@ -1511,9 +1522,16 @@
     closeCombo();
   }
 
+  // The whole list, scrollable like the original dropdown, with "Other" at the bottom.
+  function showAll() {
+    var items = ALL_BY_ORG.map(function (o) { return { opp: o }; });
+    items.push({ other: true });
+    openCombo(items, null, pickedOpp ? ALL_BY_ORG.indexOf(pickedOpp) : -1);
+  }
+
   function suggest() {
     var text = logOrgInput.value.trim();
-    if (!text) { closeCombo(); setHint(""); return; }
+    if (!text) { showAll(); return; }
     var matches = matchOpps(text);
     var items = matches.map(function (m) { return { opp: m.o }; });
     items.push({ custom: text });
@@ -1528,12 +1546,17 @@
     suggest();
   });
   logOrgInput.addEventListener("focus", function () { if (logOrgInput.value.trim() && !pickedOpp && !pickedCustom) suggest(); });
+  // Clicking the box opens the full list (like a dropdown); typing then narrows it.
+  logOrgInput.addEventListener("click", function () {
+    if (!logOrgList.hidden) return;
+    if (!logOrgInput.value.trim() || pickedOpp || pickedCustom) showAll(); else suggest();
+  });
   logOrgInput.addEventListener("blur", function () { setTimeout(closeCombo, 120); });
   logOrgInput.addEventListener("keydown", function (e) {
     var open = !logOrgList.hidden && comboItems.length;
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      if (!open) { logOrgInput.value.trim() ? suggest() : openCombo(ALL_BY_ORG.map(function (o) { return { opp: o }; })); return; }
+      if (!open) { logOrgInput.value.trim() && !pickedOpp ? suggest() : showAll(); return; }
       highlight(Math.min(comboActive + 1, comboItems.length - 1));
     } else if (e.key === "ArrowUp" && open) {
       e.preventDefault();
@@ -1549,7 +1572,7 @@
     e.preventDefault();
     if (!logOrgList.hidden) { closeCombo(); return; }
     logOrgInput.focus();
-    openCombo(ALL_BY_ORG.map(function (o) { return { opp: o }; }));
+    showAll();
   });
 
   logForm.addEventListener("submit", function (e) {
