@@ -373,19 +373,37 @@
   }
   .log-form input[type="number"] { width: 7rem; }
   .log-form label[hidden] { display: none; }
-  .log-form .org-select {
-    width: 100%;
-    min-width: 0;
-    border: 1.5px solid var(--border);
-    background-color: var(--surface);
-    border-radius: 10px;
-    font-family: "Plus Jakarta Sans", sans-serif;
-    font-size: 0.92rem;
-    padding: 0.7rem 0.85rem;
-    color: var(--ink);
-    text-transform: none;
-    letter-spacing: 0;
+  .combo-field { display: flex; flex-direction: column; gap: 0.35rem; flex: 1 1 280px; min-width: 0; }
+  .combo { position: relative; }
+  .combo input { width: 100%; padding-right: 2.6rem; }
+  .combo-toggle {
+    position: absolute; right: 0.3rem; top: 50%; transform: translateY(-50%);
+    width: 2rem; height: 2rem; border: none; background: none; cursor: pointer;
+    color: var(--ink-mute); border-radius: 8px; display: flex; align-items: center; justify-content: center;
   }
+  .combo-toggle:hover { color: var(--ink); background: var(--surface-2); }
+  .combo-toggle svg { width: 16px; height: 16px; }
+  .combo-list {
+    position: absolute; z-index: 20; left: 0; right: 0; top: calc(100% + 6px);
+    margin: 0; padding: 0.35rem; list-style: none;
+    max-height: 300px; overflow-y: auto;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    box-shadow: 0 14px 34px var(--shadow);
+  }
+  .combo-list[hidden] { display: none; }
+  .combo-option {
+    padding: 0.55rem 0.7rem; border-radius: 8px; cursor: pointer;
+    display: flex; flex-direction: column; gap: 0.1rem;
+    text-transform: none; letter-spacing: 0;
+  }
+  .combo-option .opt-title { font-size: 0.9rem; font-weight: 600; color: var(--ink); }
+  .combo-option .opt-meta { font-size: 0.78rem; color: var(--ink-mute); }
+  .combo-option[aria-selected="true"] { background: var(--gold-soft); }
+  .combo-option.custom .opt-title { font-weight: 500; color: var(--gold-ink); }
+  .combo-empty { padding: 0.55rem 0.7rem; font-size: 0.85rem; color: var(--ink-mute); text-transform: none; letter-spacing: 0; }
+  .combo-hint { margin: 0.45rem 0 0; min-height: 1em; font-size: 0.76rem; color: var(--ink-mute); text-transform: none; letter-spacing: 0; }
+  .combo-hint.matched { color: var(--gold-ink); }
+  .log-item .log-title { display: block; font-weight: 500; font-size: 0.8rem; color: var(--ink-mute); }
   .log-form input, .log-form select { text-transform: none; letter-spacing: 0; }
   .log-form .btn-search { padding: 0.75rem 1.2rem; }
   .log-error { font-size: 0.78rem; color: #b5482f; margin: 0.5rem 0 0; display: none; }
@@ -454,10 +472,10 @@
   .stars { display: flex; gap: 0.3rem; }
   .star-btn {
     background: none; border: none; padding: 0.15rem; cursor: pointer;
-    color: var(--border); line-height: 0; border-radius: 6px;
+    color: var(--ink-mute); opacity: 0.4; line-height: 0; border-radius: 6px;
   }
   .star-btn svg { width: 34px; height: 34px; }
-  .star-btn.on { color: #f5b301; }
+  .star-btn.on { color: #f5b301; opacity: 1; }
   .star-btn:hover { transform: scale(1.08); }
   .star-btn:focus-visible { outline: 2.5px solid var(--focus); outline-offset: 2px; }
   .feedback-more { margin-top: 1rem; display: flex; flex-direction: column; gap: 0.55rem; align-items: flex-start; }
@@ -790,14 +808,16 @@
       <p class="progress-msg" id="hoursMsg"></p>
 
       <form class="log-form" id="logForm" novalidate>
-        <label class="grow">Opportunity
-          <select id="logOrg" class="org-select">
-            <option value="">Choose an opportunity…</option>
-          </select>
-        </label>
-        <label class="grow" id="logOtherWrap" hidden>Other opportunity
-          <input id="logOther" type="text" placeholder="e.g. Church food drive">
-        </label>
+        <div class="grow combo-field">
+          <label for="logOrgInput">Opportunity</label>
+          <div class="combo">
+            <input id="logOrgInput" type="text" role="combobox" autocomplete="off" aria-autocomplete="list" aria-expanded="false" aria-controls="logOrgList" placeholder="Type or pick what you did">
+            <button type="button" class="combo-toggle" id="logOrgToggle" aria-label="Show all opportunities" tabindex="-1">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <ul class="combo-list" id="logOrgList" role="listbox" aria-label="Matching opportunities" hidden></ul>
+          </div>
+        </div>
         <label>Date
           <input id="logDate" type="date">
         </label>
@@ -806,7 +826,8 @@
         </label>
         <button class="btn-search" type="submit">Log hours</button>
       </form>
-      <p class="log-error" id="logError">Choose an opportunity (or describe it under Other) and enter between 0.25 and 24 hours.</p>
+      <p class="combo-hint" id="logOrgHint" aria-live="polite"></p>
+      <p class="log-error" id="logError">Type or pick an opportunity, and enter between 0.25 and 24 hours.</p>
     </div>
 
     <h2 class="log-heading">Logged hours</h2>
@@ -827,6 +848,7 @@
     </div>
     <p class="feedback-thanks" id="feedbackThanks" hidden>Thanks for rating Groundwork! 💛</p>
   </section>
+
 
 </div>
 
@@ -1346,7 +1368,6 @@
   var progressPanel = document.getElementById("progressPanel");
   var hoursBadge = document.getElementById("hoursBadge");
   var logForm = document.getElementById("logForm");
-  var logOrg = document.getElementById("logOrg");
   var logDate = document.getElementById("logDate");
   var logHours = document.getElementById("logHours");
   var logError = document.getElementById("logError");
@@ -1358,39 +1379,206 @@
   }
   logDate.value = todayISO();
 
-  // Dropdown of listed organizations, plus an "Other" choice for anything not on the site.
-  var OTHER_VALUE = "__other__";
-  var logOther = document.getElementById("logOther");
-  var logOtherWrap = document.getElementById("logOtherWrap");
-  Array.from(new Set(OPPS.map(function (o) { return o.org; }))).sort().forEach(function (name) {
-    var opt = document.createElement("option");
-    opt.value = name;
-    opt.textContent = name;
-    logOrg.appendChild(opt);
+  // ---- Opportunity picker: type to match a listed opportunity, open the list to browse,
+  // or keep your own wording for something not on the site.
+  var logOrgInput = document.getElementById("logOrgInput");
+  var logOrgList = document.getElementById("logOrgList");
+  var logOrgToggle = document.getElementById("logOrgToggle");
+  var logOrgHint = document.getElementById("logOrgHint");
+  var pickedOpp = null;      // the listing chosen from the suggestions
+  var pickedCustom = false;  // chose "log as written"
+  var comboItems = [];       // [{opp} | {custom: text}] currently shown
+  var comboActive = -1;
+
+  var ALL_BY_ORG = OPPS.slice().sort(function (a, b) {
+    return a.org.localeCompare(b.org) || a.title.localeCompare(b.title);
   });
-  var otherOpt = document.createElement("option");
-  otherOpt.value = OTHER_VALUE;
-  otherOpt.textContent = "Other (not listed)";
-  logOrg.appendChild(otherOpt);
-  logOrg.addEventListener("change", function () {
-    logOtherWrap.hidden = logOrg.value !== OTHER_VALUE;
-    if (!logOtherWrap.hidden) logOther.focus();
+  function oppLabel(o) { return o.title + " — " + o.org; }
+
+  var PICK_STOP = {};
+  "i im a an the at for with and of to in on my me we our was were volunteer volunteered volunteering help helped helping did do worked working work went some".split(" ")
+    .forEach(function (w) { PICK_STOP[w] = true; });
+
+  function editDistance(a, b) {
+    if (Math.abs(a.length - b.length) > 2) return 3;
+    var prev = [], cur, i, j;
+    for (j = 0; j <= b.length; j++) prev[j] = j;
+    for (i = 1; i <= a.length; i++) {
+      cur = [i];
+      for (j = 1; j <= b.length; j++) {
+        cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      }
+      prev = cur;
+    }
+    return prev[b.length];
+  }
+
+  // Score each listing against what was typed: whole words and prefixes count most, near-misses
+  // (typos) a little, and interest words like "dogs" count toward the matching category.
+  function matchOpps(text) {
+    var tokens = text.toLowerCase().replace(/[’']/g, "").split(/[^a-z0-9]+/).filter(function (t) {
+      return t.length > 1 && !PICK_STOP[t];
+    });
+    if (!tokens.length) return [];
+    var scored = OPPS.map(function (o) {
+      var hay = (o.title + " " + o.org + " " + o.city + " " + CAT_BY_KEY[o.cat].label).toLowerCase().replace(/[’']/g, "");
+      var words = hay.split(/[^a-z0-9]+/);
+      var score = 0, hit = 0;
+      tokens.forEach(function (t) {
+        var st = stem(t), rt = root(t);
+        if (words.some(function (w) { return w === t || w === st; })) { score += 3; hit++; }
+        else if (rt.length >= 4 && words.some(function (w) { return root(w) === rt; })) { score += 2.5; hit++; }
+        else if (words.some(function (w) { return w.indexOf(st) === 0; })) { score += 2; hit++; }
+        else if (hay.indexOf(st) > -1) { score += 1.5; hit++; }
+        else if (st.length >= 4 && words.some(function (w) { return w.length >= 4 && editDistance(st, w) <= (st.length >= 7 ? 2 : 1); })) { score += 1; hit++; }
+        else if (WORD_TO_CAT[st] === o.cat) { score += 1; hit++; }
+      });
+      return { o: o, score: score, hit: hit };
+    }).filter(function (r) { return r.hit >= Math.ceil(tokens.length / 2); });
+    scored.sort(function (a, b) { return b.score - a.score || a.o.title.localeCompare(b.o.title); });
+    return scored.slice(0, 8).map(function (r) { return { o: r.o, full: r.hit === tokens.length }; });
+  }
+  // "tutoring" ~ "tutor", "walked" ~ "walking": compare word roots.
+  function root(w) { return w.replace(/(ing|ed|er|ers|es|s)$/, ""); }
+
+  function setHint(text, matched) {
+    logOrgHint.textContent = text || "";
+    logOrgHint.classList.toggle("matched", !!matched);
+  }
+
+  function closeCombo() {
+    logOrgList.hidden = true;
+    logOrgInput.setAttribute("aria-expanded", "false");
+    logOrgInput.removeAttribute("aria-activedescendant");
+    comboActive = -1;
+  }
+
+  function highlight(i) {
+    comboActive = i;
+    Array.prototype.forEach.call(logOrgList.querySelectorAll(".combo-option"), function (li, k) {
+      li.setAttribute("aria-selected", k === i ? "true" : "false");
+      if (k === i) { logOrgInput.setAttribute("aria-activedescendant", li.id); li.scrollIntoView({ block: "nearest" }); }
+    });
+  }
+
+  function openCombo(items, emptyText, startAt) {
+    comboItems = items;
+    logOrgList.innerHTML = "";
+    if (!items.length) {
+      var empty = document.createElement("li");
+      empty.className = "combo-empty";
+      empty.textContent = emptyText || "No matches";
+      logOrgList.appendChild(empty);
+    }
+    items.forEach(function (item, i) {
+      var li = document.createElement("li");
+      li.className = "combo-option" + (item.custom != null ? " custom" : "");
+      li.id = "logOrgOpt" + i;
+      li.setAttribute("role", "option");
+      var t = document.createElement("span");
+      t.className = "opt-title";
+      var m = document.createElement("span");
+      m.className = "opt-meta";
+      if (item.custom != null) {
+        t.textContent = "Log “" + item.custom + "” as written";
+        m.textContent = "Not on Groundwork? That's fine — it still counts.";
+      } else {
+        t.textContent = item.opp.title;
+        m.textContent = item.opp.org + " · " + item.opp.city;
+      }
+      li.appendChild(t);
+      li.appendChild(m);
+      // mousedown, not click, so the input keeps focus and the list doesn't close first.
+      li.addEventListener("mousedown", function (e) { e.preventDefault(); choose(i); });
+      logOrgList.appendChild(li);
+    });
+    logOrgList.hidden = false;
+    logOrgInput.setAttribute("aria-expanded", "true");
+    highlight(startAt != null ? startAt : -1);
+  }
+
+  function choose(i) {
+    var item = comboItems[i];
+    if (!item) return;
+    if (item.custom != null) {
+      pickedOpp = null; pickedCustom = true;
+      setHint("Will be logged as written.");
+    } else {
+      pickedOpp = item.opp; pickedCustom = false;
+      logOrgInput.value = oppLabel(item.opp);
+      setHint("✓ Matched to a Groundwork listing", true);
+    }
+    closeCombo();
+  }
+
+  function suggest() {
+    var text = logOrgInput.value.trim();
+    if (!text) { closeCombo(); setHint(""); return; }
+    var matches = matchOpps(text);
+    var items = matches.map(function (m) { return { opp: m.o }; });
+    items.push({ custom: text });
+    // Pre-select the top suggestion only when every word typed matched it, so Enter
+    // never quietly swaps in a loosely related listing.
+    openCombo(items, null, matches.length && matches[0].full ? 0 : -1);
+  }
+
+  logOrgInput.addEventListener("input", function () {
+    pickedOpp = null; pickedCustom = false;
+    setHint("");
+    suggest();
+  });
+  logOrgInput.addEventListener("focus", function () { if (logOrgInput.value.trim() && !pickedOpp && !pickedCustom) suggest(); });
+  logOrgInput.addEventListener("blur", function () { setTimeout(closeCombo, 120); });
+  logOrgInput.addEventListener("keydown", function (e) {
+    var open = !logOrgList.hidden && comboItems.length;
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      if (!open) { logOrgInput.value.trim() ? suggest() : openCombo(ALL_BY_ORG.map(function (o) { return { opp: o }; })); return; }
+      highlight(Math.min(comboActive + 1, comboItems.length - 1));
+    } else if (e.key === "ArrowUp" && open) {
+      e.preventDefault();
+      highlight(Math.max(comboActive - 1, 0));
+    } else if (e.key === "Enter" && open && comboActive > -1) {
+      e.preventDefault();
+      choose(comboActive);
+    } else if (e.key === "Escape" && !logOrgList.hidden) {
+      closeCombo();
+    }
+  });
+  logOrgToggle.addEventListener("mousedown", function (e) {
+    e.preventDefault();
+    if (!logOrgList.hidden) { closeCombo(); return; }
+    logOrgInput.focus();
+    openCombo(ALL_BY_ORG.map(function (o) { return { opp: o }; }));
   });
 
   logForm.addEventListener("submit", function (e) {
     e.preventDefault();
-    var org = logOrg.value === OTHER_VALUE ? logOther.value.trim() : logOrg.value;
+    var text = logOrgInput.value.trim();
+    var opp = pickedOpp;
+    // Typed an exact listing or organization name without picking it? Match it anyway.
+    if (!opp && !pickedCustom && text) {
+      var lower = text.toLowerCase();
+      opp = OPPS.filter(function (o) { return oppLabel(o).toLowerCase() === lower; })[0] || null;
+      if (!opp) {
+        var orgHits = OPPS.filter(function (o) { return o.org.toLowerCase() === lower; });
+        if (orgHits.length === 1) opp = orgHits[0];
+      }
+    }
     var hrs = Number(logHours.value);
-    if (!org || !(hrs >= 0.25 && hrs <= 24)) {
+    if (!text || !(hrs >= 0.25 && hrs <= 24)) {
       logError.classList.add("show");
       return;
     }
     logError.classList.remove("show");
-    state.hoursLog.push({ id: Date.now() + "-" + Math.random().toString(36).slice(2, 7), org: org, date: logDate.value || todayISO(), hours: Math.round(hrs * 100) / 100 });
+    var entry = { id: Date.now() + "-" + Math.random().toString(36).slice(2, 7), org: opp ? opp.org : text, date: logDate.value || todayISO(), hours: Math.round(hrs * 100) / 100 };
+    if (opp) entry.title = opp.title;
+    state.hoursLog.push(entry);
     saveHours(state.hoursLog);
-    logOrg.value = "";
-    logOther.value = "";
-    logOtherWrap.hidden = true;
+    logOrgInput.value = "";
+    pickedOpp = null; pickedCustom = false;
+    setHint("");
+    closeCombo();
     logHours.value = "";
     render();
   });
@@ -1434,6 +1622,7 @@
       var li = document.createElement("li");
       li.className = "log-item";
       var org = document.createElement("span"); org.className = "log-org"; org.textContent = entry.org;
+      if (entry.title) { var tt = document.createElement("span"); tt.className = "log-title"; tt.textContent = entry.title; org.appendChild(tt); }
       var date = document.createElement("span"); date.className = "log-date";
       var parts = (entry.date || "").split("-");
       date.textContent = parts.length === 3 ? new Date(+parts[0], +parts[1] - 1, +parts[2]).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" }) : "";
@@ -1857,7 +2046,9 @@
     }
   }
 
-  render();
+  // A link ending in #hours opens the My hours tab directly.
+  if (location.hash === "#hours") setTab("progress");
+  else render();
 })();
 </script>
 
