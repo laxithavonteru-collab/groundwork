@@ -1467,7 +1467,7 @@
     var d = new Date();
     return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
   }
-  logDate.value = todayISO();
+  // The date starts empty so students pick the day they actually volunteered.
   // Volunteer hours can't be logged for days that haven't happened yet. The max is refreshed
   // on focus in case the page stays open past midnight.
   logDate.max = todayISO();
@@ -1684,7 +1684,13 @@
       }
     }
     var hrs = Number(logHours.value);
-    if (logDate.value && logDate.value > todayISO()) {
+    if (!logDate.value) {
+      logError.textContent = "Pick the date you volunteered.";
+      logError.classList.add("show");
+      logDate.focus();
+      return;
+    }
+    if (logDate.value > todayISO()) {
       logError.textContent = "That date is in the future — pick today or an earlier day.";
       logError.classList.add("show");
       return;
@@ -1695,7 +1701,7 @@
       return;
     }
     logError.classList.remove("show");
-    var entry = { id: Date.now() + "-" + Math.random().toString(36).slice(2, 7), org: opp ? opp.org : text, date: logDate.value || todayISO(), hours: Math.round(hrs * 100) / 100 };
+    var entry = { id: Date.now() + "-" + Math.random().toString(36).slice(2, 7), org: opp ? opp.org : text, date: logDate.value, hours: Math.round(hrs * 100) / 100 };
     if (opp) entry.title = opp.title;
     state.hoursLog.push(entry);
     saveHours(state.hoursLog);
