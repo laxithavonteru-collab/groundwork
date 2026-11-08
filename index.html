@@ -487,6 +487,18 @@
   .about-card p { margin: 0 0 1rem; font-size: 1.04rem; line-height: 1.7; color: var(--ink-soft); }
   .about-card .about-slogan { margin: 1.4rem 0 0; font-size: 1.15rem; font-weight: 700; color: var(--ink); }
   @media (max-width: 640px) { .about-card { padding: 1.25rem 1.2rem; } }
+  .insta-link {
+    margin-top: 1.1rem;
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    padding: 0.75rem 1.1rem;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    box-shadow: 0 6px 18px var(--card-shadow);
+    color: var(--ink); text-decoration: none; font-size: 0.95rem;
+  }
+  .insta-link svg { width: 22px; height: 22px; color: #d62976; flex: none; }
+  .insta-link strong { color: var(--gold-ink); }
+  .insta-link:hover { border-color: var(--gold); }
+  .insta-link:focus-visible { outline: 2.5px solid var(--focus); outline-offset: 2px; }
 
   /* ---------- Feedback / rating ---------- */
   .feedback-card {
@@ -872,11 +884,15 @@
       <p class="about-subhead">Built by high schoolers, for high schoolers.</p>
     </section>
     <section class="about-card" aria-label="Our story">
-      <p>Groundwork started as a simple summer project born out of a conversation over lunch. The two of us, Laxitha Vonteru and Shreysi Jonalla, were talking about volunteering and kept running into the exact same problem: finding opportunities that actually fit our lives. We wanted something close to home, open to our age group, manageable alongside school, and connected to causes we truly cared about.</p>
+      <p>Groundwork started as a simple summer project born out of a conversation over lunch. The two of us, Laxitha Vonteru and Shreyasi Jonnala, were talking about volunteering and kept running into the exact same problem: finding opportunities that actually fit our lives. We wanted something close to home, open to our age group, manageable alongside school, and connected to causes we truly cared about.</p>
       <p>While great opportunities were out there, they were scattered across outdated websites, random lists, and word-of-mouth recommendations. So, we decided to build the platform we wished existed. Groundwork lets you search real volunteering opportunities across Maryland by ZIP code, interest, or schedule, while offering a simple way to track your hours as you go.</p>
       <p>Although we created Groundwork with high schoolers in mind, it is built for anyone ready to give back—whether you are a student, parent, retiree, or simply looking for a cause that resonates with you.</p>
       <p class="about-slogan">Don't just count your hours — make your hours count.</p>
     </section>
+    <a class="insta-link" href="https://www.instagram.com/groundwork.volunteering/" target="_blank" rel="noopener noreferrer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+      <span>Follow us on Instagram <strong>@groundwork.volunteering</strong></span>
+    </a>
   </div>
 
   <section class="feedback-card" id="feedbackCard" aria-labelledby="feedbackTitle">
