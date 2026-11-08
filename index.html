@@ -421,11 +421,30 @@
   .log-item .log-org { flex: 1; font-weight: 600; font-size: 0.93rem; min-width: 0; overflow-wrap: anywhere; }
   .log-item .log-date { font-size: 0.82rem; color: var(--ink-mute); white-space: nowrap; }
   .log-item .log-hrs { font-weight: 700; font-size: 0.9rem; color: var(--gold-ink); white-space: nowrap; }
-  .log-del {
+  .log-hrs-input {
+    width: 5.2rem;
+    border: 1.5px solid var(--gold); border-radius: 8px;
+    background: var(--surface); color: var(--ink);
+    font-family: "Plus Jakarta Sans", sans-serif; font-size: 0.88rem; font-weight: 600;
+    padding: 0.3rem 0.45rem; outline: none;
+  }
+  .log-name-input, .log-date-input {
+    border: 1.5px solid var(--gold); border-radius: 8px;
+    background: var(--surface); color: var(--ink);
+    font-family: "Plus Jakarta Sans", sans-serif; font-size: 0.88rem;
+    padding: 0.3rem 0.5rem; outline: none; min-width: 0;
+  }
+  .log-name-input { flex: 1 1 220px; }
+  .log-hrs-input.invalid, .log-name-input.invalid, .log-date-input.invalid { border-color: #b5482f; }
+  .log-item.editing { flex-wrap: wrap; }
+  .log-edit, .log-del {
     background: none; border: none; cursor: pointer; color: var(--ink-mute);
     width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex: none;
   }
   .log-del:hover { color: var(--fav); background: var(--surface-2); }
+  .log-edit:hover { color: var(--gold-ink); background: var(--surface-2); }
+  .log-edit:focus-visible { outline: 2.5px solid var(--focus); outline-offset: 2px; }
+  .log-edit svg { width: 16px; height: 16px; }
   .log-del:focus-visible { outline: 2.5px solid var(--focus); outline-offset: 2px; }
   .log-del svg { width: 16px; height: 16px; }
   @media (max-width: 520px) {
@@ -822,7 +841,7 @@
           <input id="logDate" type="date">
         </label>
         <label>Hours
-          <input id="logHours" type="number" min="0.25" max="24" step="0.25" placeholder="2">
+          <input id="logHours" type="number" min="0.25" max="24" step="0.25" placeholder="0">
         </label>
         <button class="btn-search" type="submit">Log hours</button>
       </form>
@@ -1677,6 +1696,93 @@
     render();
   });
 
+  var PENCIL_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16v4Z"/><path d="M13.5 6.5l4 4"/></svg>';
+  var CHECK_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+  var X_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+
+  // Edit a logged entry in place — opportunity, date and hours. Enter or ✓ saves, Esc or ✕ cancels.
+  // The name box suggests listings; picking one links the entry to it, other text is kept as written.
+  var oppLabelList = document.createElement("datalist");
+  oppLabelList.id = "oppLabelList";
+  ALL_BY_ORG.forEach(function (o) {
+    var opt = document.createElement("option");
+    opt.value = oppLabel(o);
+    oppLabelList.appendChild(opt);
+  });
+  document.body.appendChild(oppLabelList);
+
+  function entryLabel(entry) { return entry.title ? entry.title + " — " + entry.org : entry.org; }
+
+  function startEditEntry(li, entry) {
+    var name = document.createElement("input");
+    name.type = "text"; name.className = "log-name-input";
+    name.value = entryLabel(entry);
+    name.setAttribute("list", "oppLabelList");
+    name.setAttribute("aria-label", "Opportunity");
+    var date = document.createElement("input");
+    date.type = "date"; date.className = "log-date-input";
+    date.value = entry.date || todayISO();
+    date.setAttribute("aria-label", "Date");
+    var hrs = document.createElement("input");
+    hrs.type = "number"; hrs.min = "0.25"; hrs.max = "24"; hrs.step = "0.25";
+    hrs.className = "log-hrs-input"; hrs.value = String(entry.hours);
+    hrs.setAttribute("aria-label", "Hours");
+    var save = document.createElement("button");
+    save.className = "log-edit"; save.type = "button"; save.setAttribute("aria-label", "Save changes"); save.innerHTML = CHECK_ICON;
+    var cancel = document.createElement("button");
+    cancel.className = "log-del"; cancel.type = "button"; cancel.setAttribute("aria-label", "Cancel editing"); cancel.innerHTML = X_ICON;
+
+    li.innerHTML = "";
+    li.classList.add("editing");
+    [name, date, hrs, save, cancel].forEach(function (el) { li.appendChild(el); });
+    name.focus(); name.select();
+
+    function commit() {
+      var text = name.value.trim();
+      var h = Number(hrs.value);
+      var ok = true;
+      if (!text) { name.classList.add("invalid"); ok = false; }
+      if (!date.value) { date.classList.add("invalid"); ok = false; }
+      if (!(h >= 0.25 && h <= 24)) { hrs.classList.add("invalid"); ok = false; }
+      if (!ok) return;
+      var changes = { date: date.value, hours: Math.round(h * 100) / 100 };
+      if (text !== entryLabel(entry)) {
+        var lower = text.toLowerCase();
+        var opp = OPPS.filter(function (o) { return oppLabel(o).toLowerCase() === lower; })[0] || null;
+        if (!opp) {
+          var orgHits = OPPS.filter(function (o) { return o.org.toLowerCase() === lower; });
+          if (orgHits.length === 1) opp = orgHits[0];
+        }
+        changes.org = opp ? opp.org : text;
+        changes.title = opp ? opp.title : null;
+      }
+      updateEntry(entry.id, changes);
+    }
+    save.addEventListener("click", commit);
+    cancel.addEventListener("click", function () { render(); });
+    [name, date, hrs].forEach(function (el) {
+      el.addEventListener("input", function () { el.classList.remove("invalid"); });
+      el.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") { e.preventDefault(); commit(); }
+        else if (e.key === "Escape") { render(); }
+      });
+    });
+  }
+
+  function updateEntry(id, changes) {
+    state.hoursLog.forEach(function (e) {
+      if (e.id !== id) return;
+      e.date = changes.date;
+      e.hours = changes.hours;
+      if ("org" in changes) {
+        e.org = changes.org;
+        if (changes.title) e.title = changes.title; else delete e.title;
+      }
+    });
+    saveHours(state.hoursLog);
+    render();
+  }
+
   function deleteHours(id) {
     state.hoursLog = state.hoursLog.filter(function (e) { return e.id !== id; });
     saveHours(state.hoursLog);
@@ -1721,11 +1827,15 @@
       var parts = (entry.date || "").split("-");
       date.textContent = parts.length === 3 ? new Date(+parts[0], +parts[1] - 1, +parts[2]).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" }) : "";
       var hrs = document.createElement("span"); hrs.className = "log-hrs"; hrs.textContent = fmtHours(entry.hours) + (entry.hours === 1 ? " hr" : " hrs");
+      var edit = document.createElement("button");
+      edit.className = "log-edit"; edit.type = "button"; edit.setAttribute("aria-label", "Edit entry for " + entry.org);
+      edit.innerHTML = PENCIL_ICON;
+      edit.addEventListener("click", function () { startEditEntry(li, entry); });
       var del = document.createElement("button");
       del.className = "log-del"; del.type = "button"; del.setAttribute("aria-label", "Delete entry for " + entry.org);
       del.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>';
       del.addEventListener("click", function () { deleteHours(entry.id); });
-      li.appendChild(org); li.appendChild(date); li.appendChild(hrs); li.appendChild(del);
+      li.appendChild(org); li.appendChild(date); li.appendChild(hrs); li.appendChild(edit); li.appendChild(del);
       logList.appendChild(li);
     });
   }
