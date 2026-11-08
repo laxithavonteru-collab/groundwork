@@ -1468,6 +1468,11 @@
     return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
   }
   logDate.value = todayISO();
+  // Volunteer hours can't be logged for days that haven't happened yet. The max is refreshed
+  // on focus in case the page stays open past midnight.
+  logDate.max = todayISO();
+  logDate.addEventListener("focus", function () { logDate.max = todayISO(); });
+  var LOG_ERROR_DEFAULT = logError.textContent;
 
   // ---- Opportunity picker: type to match a listed opportunity, open the list to browse,
   // or keep your own wording for something not on the site.
@@ -1679,6 +1684,12 @@
       }
     }
     var hrs = Number(logHours.value);
+    if (logDate.value && logDate.value > todayISO()) {
+      logError.textContent = "That date is in the future — pick today or an earlier day.";
+      logError.classList.add("show");
+      return;
+    }
+    logError.textContent = LOG_ERROR_DEFAULT;
     if (!text || !(hrs >= 0.25 && hrs <= 24)) {
       logError.classList.add("show");
       return;
@@ -1722,6 +1733,7 @@
     var date = document.createElement("input");
     date.type = "date"; date.className = "log-date-input";
     date.value = entry.date || todayISO();
+    date.max = todayISO();
     date.setAttribute("aria-label", "Date");
     var hrs = document.createElement("input");
     hrs.type = "number"; hrs.min = "0.25"; hrs.max = "24"; hrs.step = "0.25";
@@ -1742,7 +1754,7 @@
       var h = Number(hrs.value);
       var ok = true;
       if (!text) { name.classList.add("invalid"); ok = false; }
-      if (!date.value) { date.classList.add("invalid"); ok = false; }
+      if (!date.value || date.value > todayISO()) { date.classList.add("invalid"); date.title = "Pick today or an earlier day"; ok = false; }
       if (!(h >= 0.25 && h <= 24)) { hrs.classList.add("invalid"); ok = false; }
       if (!ok) return;
       var changes = { date: date.value, hours: Math.round(h * 100) / 100 };
