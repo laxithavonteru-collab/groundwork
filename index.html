@@ -315,7 +315,7 @@
   }
   .tab-btn[aria-selected="true"] .tab-count { color: var(--gold-ink); background: var(--gold-soft); border-color: var(--gold-soft-border); }
 
-  #browsePanel, #favoritesPanel, #progressPanel { margin-top: 1.5rem; }
+  #browsePanel, #favoritesPanel, #progressPanel, #aboutPanel { margin-top: 1.5rem; }
 
   /* ---------- Progress tracker ---------- */
   .progress-card {
@@ -476,6 +476,18 @@
     margin-top: 0.9rem;
     display: flex; gap: 0.6rem; flex-wrap: wrap;
   }
+  /* ---------- About tab ---------- */
+  .about-hero { margin: 0.5rem 0 1.4rem; }
+  .about-title { margin: 0; font-weight: 800; font-size: clamp(1.8rem, 4vw, 2.5rem); letter-spacing: -0.02em; line-height: 1.1; }
+  .about-subhead { margin: 0.45rem 0 0; font-size: clamp(1.05rem, 1.8vw, 1.2rem); font-weight: 600; color: var(--gold-ink); }
+  .about-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+    padding: 1.6rem 1.75rem; box-shadow: 0 6px 18px var(--card-shadow); max-width: 46rem;
+  }
+  .about-card p { margin: 0 0 1rem; font-size: 1.04rem; line-height: 1.7; color: var(--ink-soft); }
+  .about-card .about-slogan { margin: 1.4rem 0 0; font-size: 1.15rem; font-weight: 700; color: var(--ink); }
+  @media (max-width: 640px) { .about-card { padding: 1.25rem 1.2rem; } }
+
   /* ---------- Feedback / rating ---------- */
   .feedback-card {
     margin-top: 3.5rem;
@@ -741,6 +753,7 @@
     <button class="tab-btn" id="tabBrowse" role="tab" type="button" aria-selected="true">Browse opportunities</button>
     <button class="tab-btn" id="tabFavorites" role="tab" type="button" aria-selected="false">My favorites <span class="tab-count" id="favCountBadge">0</span></button>
     <button class="tab-btn" id="tabProgress" role="tab" type="button" aria-selected="false">My hours <span class="tab-count" id="hoursBadge">0 / 75</span></button>
+    <button class="tab-btn" id="tabAbout" role="tab" type="button" aria-selected="false">About Us</button>
   </div>
 
   <div id="browsePanel">
@@ -851,6 +864,19 @@
 
     <h2 class="log-heading">Logged hours</h2>
     <ul class="log-list" id="logList"></ul>
+  </div>
+
+  <div id="aboutPanel" hidden>
+    <section class="about-hero">
+      <h2 class="about-title">About Groundwork</h2>
+      <p class="about-subhead">Built by high schoolers, for high schoolers.</p>
+    </section>
+    <section class="about-card" aria-label="Our story">
+      <p>Groundwork started as a simple summer project born out of a conversation over lunch. The two of us, Laxitha Vonteru and Shreysi Jonalla, were talking about volunteering and kept running into the exact same problem: finding opportunities that actually fit our lives. We wanted something close to home, open to our age group, manageable alongside school, and connected to causes we truly cared about.</p>
+      <p>While great opportunities were out there, they were scattered across outdated websites, random lists, and word-of-mouth recommendations. So, we decided to build the platform we wished existed. Groundwork lets you search real volunteering opportunities across Maryland by ZIP code, interest, or schedule, while offering a simple way to track your hours as you go.</p>
+      <p>Although we created Groundwork with high schoolers in mind, it is built for anyone ready to give back—whether you are a student, parent, retiree, or simply looking for a cause that resonates with you.</p>
+      <p class="about-slogan">Don't just count your hours — make your hours count.</p>
+    </section>
   </div>
 
   <section class="feedback-card" id="feedbackCard" aria-labelledby="feedbackTitle">
@@ -1277,7 +1303,7 @@
     favorites: loadFavorites(),
     hoursLog: loadHours(),
     ai: null, // { query, order: [ids], reasons: {id: why} } from the last "Ask AI" for this exact query
-    tab: "browse" // "browse" | "favorites" | "progress"
+    tab: "browse" // "browse" | "favorites" | "progress" | "about"
   };
 
   function clearAllFavorites() {
@@ -1327,6 +1353,8 @@
   var tabFavorites = document.getElementById("tabFavorites");
   var favCountBadge = document.getElementById("favCountBadge");
   var tabProgress = document.getElementById("tabProgress");
+  var tabAbout = document.getElementById("tabAbout");
+  var aboutPanel = document.getElementById("aboutPanel");
 
   document.getElementById("searchBtn").addEventListener("click", doSearch);
   zipInput.addEventListener("keydown", function (e) { if (e.key === "Enter") doSearch(); });
@@ -1445,14 +1473,17 @@
     tabBrowse.setAttribute("aria-selected", tab === "browse" ? "true" : "false");
     tabFavorites.setAttribute("aria-selected", tab === "favorites" ? "true" : "false");
     tabProgress.setAttribute("aria-selected", tab === "progress" ? "true" : "false");
+    tabAbout.setAttribute("aria-selected", tab === "about" ? "true" : "false");
     browsePanel.hidden = tab !== "browse";
     favoritesPanel.hidden = tab !== "favorites";
     progressPanel.hidden = tab !== "progress";
+    aboutPanel.hidden = tab !== "about";
     render();
   }
   tabBrowse.addEventListener("click", function () { setTab("browse"); });
   tabFavorites.addEventListener("click", function () { setTab("favorites"); });
   tabProgress.addEventListener("click", function () { setTab("progress"); });
+  tabAbout.addEventListener("click", function () { setTab("about"); });
 
   // ---------------- hours tracker ----------------
   var progressPanel = document.getElementById("progressPanel");
@@ -2286,8 +2317,9 @@
     }
   }
 
-  // A link ending in #hours opens the My hours tab directly.
+  // A link ending in #hours or #about opens that tab directly.
   if (location.hash === "#hours") setTab("progress");
+  else if (location.hash === "#about") setTab("about");
   else render();
 })();
 </script>
