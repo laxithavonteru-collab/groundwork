@@ -1261,6 +1261,14 @@
     tab: "browse" // "browse" | "favorites" | "progress"
   };
 
+  function clearAllFavorites() {
+    var n = state.favorites.size;
+    if (!n || !window.confirm("Remove all " + n + " favorite" + (n === 1 ? "" : "s") + "? This can't be undone.")) return;
+    state.favorites.clear();
+    saveFavorites(state.favorites);
+    render();
+  }
+
   function toggleFavorite(id) {
     if (state.favorites.has(id)) state.favorites.delete(id); else state.favorites.add(id);
     saveFavorites(state.favorites);
@@ -1735,10 +1743,23 @@
     render();
   }
 
-  function clearSearch() {
+  // Resets every Browse filter: ZIP, distance, category pills, plain-English search (and any
+  // AI ranking for it) and age.
+  function clearAllFilters() {
     state.search = null;
     zipInput.value = "";
     zipError.classList.remove("show");
+    state.radius = 25;
+    radiusSelect.value = "25";
+    state.selectedCats.clear();
+    Array.prototype.forEach.call(pillRow.querySelectorAll(".pill"), function (b) { b.setAttribute("aria-pressed", "false"); });
+    if (aiCtl) { aiCtl.abort(); aiCtl = null; aiBtn.disabled = false; }
+    setAiStatus("");
+    state.ai = null;
+    state.keyword = "";
+    keywordInput.value = "";
+    state.minAge = "";
+    ageInput.value = "";
     render();
   }
 
@@ -2088,20 +2109,22 @@
       }
     }
 
+    var statusText;
     if (state.search) {
-      statusLine.innerHTML = "<strong>" + items.length + "</strong> " + (items.length === 1 ? "opportunity" : "opportunities") +
-        " near " + state.search.zip + (rank ? ", best matches first" : ", closest first") +
-        ' <button class="clear-link" id="clearBtn" type="button">Clear ZIP</button>' +
-        (approxNote ? '<div class="approx-note">' + approxNote + '</div>' : "");
-      var cb = document.getElementById("clearBtn");
-      if (cb) cb.addEventListener("click", clearSearch);
+      statusText = "<strong>" + items.length + "</strong> " + (items.length === 1 ? "opportunity" : "opportunities") +
+        " near " + state.search.zip + (rank ? ", best matches first" : ", closest first");
     } else if (rank) {
-      statusLine.innerHTML = "<strong>" + items.length + "</strong> " + (items.length === 1 ? "opportunity matches" : "opportunities match") + " your search, best matches first";
+      statusText = "<strong>" + items.length + "</strong> " + (items.length === 1 ? "opportunity matches" : "opportunities match") + " your search, best matches first";
     } else {
-      statusLine.innerHTML = "<strong>" + items.length + "</strong> " + (items.length === 1 ? "opportunity" : "opportunities") + " listed across Maryland — enter a ZIP code to sort by distance";
+      statusText = "<strong>" + items.length + "</strong> " + (items.length === 1 ? "opportunity" : "opportunities") + " listed across Maryland — enter a ZIP code to sort by distance";
     }
-
-    if (widenedNote) statusLine.innerHTML += '<div class="approx-note">' + widenedNote + '</div>';
+    var filtersActive = !noFilters || state.radius !== 25;
+    statusLine.innerHTML = statusText +
+      (filtersActive ? ' <button class="clear-link" id="clearBtn" type="button">Clear all filters</button>' : "") +
+      (approxNote ? '<div class="approx-note">' + approxNote + '</div>' : "") +
+      (widenedNote ? '<div class="approx-note">' + widenedNote + '</div>' : "");
+    var cb = document.getElementById("clearBtn");
+    if (cb) cb.addEventListener("click", clearAllFilters);
 
     renderItemsInto(grid, items, aiActive ? state.ai.reasons : null,
       "No opportunities match yet",
@@ -2113,8 +2136,11 @@
       if (state.search) favItems.sort(function (a, b) { return a._dist - b._dist; });
 
       favStatusLine.innerHTML = favItems.length
-        ? "<strong>" + favItems.length + "</strong> favorited " + (favItems.length === 1 ? "opportunity" : "opportunities") + (state.search ? ", closest first" : "")
+        ? "<strong>" + favItems.length + "</strong> favorited " + (favItems.length === 1 ? "opportunity" : "opportunities") + (state.search ? ", closest first" : "") +
+          ' <button class="clear-link" id="clearFavsBtn" type="button">Clear all favorites</button>'
         : "";
+      var cfb = document.getElementById("clearFavsBtn");
+      if (cfb) cfb.addEventListener("click", clearAllFavorites);
 
       renderItemsInto(favGrid, favItems, null,
         "No favorites yet",
